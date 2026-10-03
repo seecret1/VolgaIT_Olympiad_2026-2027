@@ -21,16 +21,15 @@ class FormFieldsTests extends BaseUiTest {
     @Severity(SeverityLevel.BLOCKER)
     @DisplayName("Selenium reads Automation Tools and writes them to Message separated by commas")
     void automation_tools_are_copied_to_message() {
-        open("/form-fields/");
+        open(URL_FORM_FIELDS);
         FormFieldsPage form = new FormFieldsPage(driver);
 
-        List<String> expectedTools = List.of(
-                "Selenium", "Playwright", "Cypress", "Appium", "Katalon Studio");
+        List<String> expectedTools = AUTOMATION_TOOLS;
         String message = form.fillMessageWithAutomationTools();
 
         assertAll(
                 () -> assertEquals(expectedTools, form.automationTools()),
-                () -> assertEquals(String.join(", ", expectedTools), message),
+                () -> assertEquals(String.join(AUTOMATION_TOOLS_SEPARATOR, expectedTools), message),
                 () -> assertEquals(message, form.messageValue())
         );
 

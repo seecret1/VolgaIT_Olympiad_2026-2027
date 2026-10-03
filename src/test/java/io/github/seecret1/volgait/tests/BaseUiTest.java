@@ -1,6 +1,7 @@
 package io.github.seecret1.volgait.tests;
 
 import io.github.seecret1.volgait.config.TestConfig;
+import io.github.seecret1.volgait.config.ConfigProvider;
 import io.github.seecret1.volgait.driver.DriverFactory;
 import io.github.seecret1.volgait.extensions.ScreenshotExtension;
 import io.qameta.allure.Allure;
@@ -11,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public abstract class BaseUiTest {
+public abstract class BaseUiTest implements ConfigProvider {
     protected WebDriver driver;
 
     @RegisterExtension
@@ -32,8 +33,8 @@ public abstract class BaseUiTest {
         }
     }
 
-    protected void open(String path) {
-        driver.get(TestConfig.baseUrl() + path);
+    protected void open(String url) {
+        driver.get(url);
         new WebDriverWait(driver, TestConfig.pageLoadTimeout()).until(current ->
                 "complete".equals(((JavascriptExecutor) current)
                         .executeScript("return document.readyState")));

@@ -24,7 +24,7 @@ class AdsTests extends BaseUiTest {
 
     @BeforeEach
     void openAdsPage() {
-        open("/ads/");
+        open(URL_ADS);
         ads = new AdsPage(driver);
     }
 
@@ -35,13 +35,13 @@ class AdsTests extends BaseUiTest {
         @Test
         @DisplayName("P01 — page has the Ads heading")
         void page_has_expected_heading() {
-            assertEquals("Ads", ads.heading());
+            assertEquals(ADS_HEADING, ads.heading());
         }
 
         @Test
         @DisplayName("P02 — page explains the ad countdown")
         void page_has_countdown_copy() {
-            assertTrue(ads.countdownText().matches(".*5.*4.*3.*2.*1.*"));
+            assertTrue(ads.countdownText().matches(ADS_COUNTDOWN_REGEX));
         }
 
         @Test
@@ -54,19 +54,19 @@ class AdsTests extends BaseUiTest {
         @Test
         @DisplayName("P04 — ad has the expected title")
         void ad_has_expected_title() {
-            assertEquals("Hi", ads.waitForAd().title());
+            assertEquals(ADS_TITLE, ads.waitForAd().title());
         }
 
         @Test
         @DisplayName("P05 — ad has the expected message")
         void ad_has_expected_message() {
-            assertTrue(ads.waitForAd().content().contains("I am an ad"));
+            assertTrue(ads.waitForAd().content().contains(ADS_MESSAGE));
         }
 
         @Test
         @DisplayName("P06 — ad exposes dialog semantics")
         void ad_has_dialog_role() {
-            assertEquals("dialog", ads.waitForAd().role());
+            assertEquals(ADS_ROLE, ads.waitForAd().role());
         }
 
         @Test
@@ -111,4 +111,3 @@ class AdsTests extends BaseUiTest {
         }
     }
 }
-

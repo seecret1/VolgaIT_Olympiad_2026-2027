@@ -12,11 +12,14 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +31,7 @@ class CalendarTests extends BaseUiTest {
 
     @BeforeEach
     void openCalendarPage() {
-        open("/calendars/");
+        open(URL_CALENDARS);
         calendar = new CalendarPage(driver);
     }
 
@@ -40,14 +43,14 @@ class CalendarTests extends BaseUiTest {
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("P01 — page has the Calendar heading")
         void page_has_expected_heading() {
-            assertEquals("Calendars", calendar.heading());
+            assertEquals(CALENDAR_HEADING, calendar.heading());
         }
 
         @Test
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("P02 — field displays the ISO date format hint")
         void field_has_iso_format_hint() {
-            assertEquals("YYYY-MM-DD", calendar.formatHint());
+            assertEquals(CALENDAR_FORMAT_HINT, calendar.formatHint());
         }
 
         @Test
@@ -65,9 +68,10 @@ class CalendarTests extends BaseUiTest {
             calendar.openCalendar();
             List<Integer> days = calendar.availableDays();
             assertAll(
-                    () -> assertTrue(days.contains(1)),
-                    () -> assertTrue(days.contains(28)),
-                    () -> assertTrue(days.size() >= 28 && days.size() <= 31)
+                    () -> assertTrue(days.contains(CALENDAR_FIRST_DAY)),
+                    () -> assertTrue(days.contains(CALENDAR_REQUIRED_LAST_DAY)),
+                    () -> assertTrue(days.size() >= CALENDAR_REQUIRED_LAST_DAY
+                            && days.size() <= CALENDAR_MAX_DAYS)
             );
         }
 
@@ -75,8 +79,8 @@ class CalendarTests extends BaseUiTest {
         @Severity(SeverityLevel.BLOCKER)
         @DisplayName("P05 — selecting day 1 fills the input")
         void selecting_day_fills_input() {
-            calendar.selectDay(1);
-            assertEquals(1, calendar.selectedLocalDate().getDayOfMonth());
+            calendar.selectDay(CALENDAR_FIRST_DAY);
+            assertEquals(CALENDAR_FIRST_DAY, calendar.selectedLocalDate().getDayOfMonth());
         }
 
         @Test
@@ -100,11 +104,17 @@ class CalendarTests extends BaseUiTest {
         }
 
         @ParameterizedTest(name = "{0} — valid date {1} can be entered")
-        @CsvSource({"P08, 2024-02-29", "P09, 2026-01-01", "P10, 2099-12-31"})
+        @MethodSource("validDates")
         @Severity(SeverityLevel.BLOCKER)
         void valid_dates_can_be_entered(String scenarioId, String date) {
             calendar.enterDate(date);
             assertEquals(LocalDate.parse(date), calendar.selectedLocalDate());
+        }
+
+        static Stream<Arguments> validDates() {
+            return IntStream.range(0, CALENDAR_VALID_DATES.size())
+                    .mapToObj(index -> Arguments.of(
+                            "P%02d".formatted(index + 8), CALENDAR_VALID_DATES.get(index)));
         }
     }
 
@@ -113,12 +123,7 @@ class CalendarTests extends BaseUiTest {
     @Tag("negative")
     class Negative {
         @ParameterizedTest(name = "{0} — invalid date {1} is not interpreted as ISO date")
-        @CsvSource({
-                "N01, 31/12/2026",
-                "N02, 2025-02-30",
-                "N03, not-a-date",
-                "N04, 2026-13-01"
-        })
+        @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
         void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {
             calendar.enterDate(invalidDate);
@@ -126,6 +131,13 @@ class CalendarTests extends BaseUiTest {
                     () -> assertEquals(invalidDate, calendar.selectedDate()),
                     () -> assertThrows(DateTimeException.class, calendar::selectedLocalDate)
             );
+        }
+
+
+        static Stream<Arguments> invalidDates() {
+            return IntStream.range(0, CALENDAR_INVALID_DATES.size())
+                    .mapToObj(index -> Arguments.of(
+                            "N%02d".formatted(index + 1), CALENDAR_INVALID_DATES.get(index)));
         }
     }
 }

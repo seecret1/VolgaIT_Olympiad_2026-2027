@@ -25,7 +25,7 @@ class ModalsTests extends BaseUiTest {
 
     @BeforeEach
     void openModalsPage() {
-        open("/modals/");
+        open(URL_MODALS);
         modals = new ModalsPage(driver);
     }
 
@@ -36,7 +36,7 @@ class ModalsTests extends BaseUiTest {
         @Test
         @DisplayName("P01 — page has the Modals heading")
         void page_has_expected_heading() {
-            assertEquals("Modals", modals.heading());
+            assertEquals(MODALS_HEADING, modals.heading());
         }
 
         @Test
@@ -49,13 +49,13 @@ class ModalsTests extends BaseUiTest {
         @Test
         @DisplayName("P03 — simple dialog has the expected title")
         void simple_dialog_has_title() {
-            assertEquals("Simple Modal", modals.openSimpleModal().title());
+            assertEquals(SIMPLE_MODAL_TITLE, modals.openSimpleModal().title());
         }
 
         @Test
         @DisplayName("P04 — simple dialog has the expected text")
         void simple_dialog_has_text() {
-            assertTrue(modals.openSimpleModal().content().contains("simple modal"));
+            assertTrue(modals.openSimpleModal().content().contains(SIMPLE_MODAL_TEXT));
         }
 
         @Test
@@ -76,7 +76,7 @@ class ModalsTests extends BaseUiTest {
         @Test
         @DisplayName("P07 — Form Modal button opens the form dialog")
         void form_button_opens_form_dialog() {
-            assertEquals("Modal Containing A Form", modals.openFormModal().title());
+            assertEquals(FORM_MODAL_TITLE, modals.openFormModal().title());
         }
 
         @Test
@@ -92,9 +92,9 @@ class ModalsTests extends BaseUiTest {
         void form_accepts_contact_data() {
             modals.openFormModal();
             ContactData data = ContactData.builder()
-                    .name("VolgaIT Finalist")
-                    .email("finalist@example.com")
-                    .message("Automation matters")
+                    .name(FORM_NAME)
+                    .email(FORM_EMAIL)
+                    .message(FORM_MESSAGE)
                     .build();
             ContactFormComponent form = modals.contactForm().fill(data);
 
@@ -142,13 +142,12 @@ class ModalsTests extends BaseUiTest {
         void malformed_email_shows_validation_error() {
             modals.openFormModal();
             ContactFormComponent form = modals.contactForm().fill(ContactData.builder()
-                    .name("Finalist")
-                    .email("invalid-email")
-                    .message("Negative check")
+                    .name(INVALID_FORM_NAME)
+                    .email(INVALID_FORM_EMAIL)
+                    .message(INVALID_FORM_MESSAGE)
                     .build());
             form.submit();
             assertFalse(form.errorText("email").isBlank());
         }
     }
 }
-

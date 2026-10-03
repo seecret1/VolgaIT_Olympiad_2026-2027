@@ -29,6 +29,7 @@
 - **Factory** — `DriverFactory` централизованно создаёт Chrome/Firefox с едиными настройками;
 - **Builder** — `ContactData.Builder` создаёт читаемые тестовые данные формы;
 - **JUnit Extension** — `ScreenshotExtension` прикладывает скриншот, HTML страницы и причину к Allure до закрытия браузера.
+- **External Configuration** — URL, параметры запуска, вводимые данные и ожидаемые значения хранятся в `application.conf` и читаются через `ConfigProvider`.
 
 Не используются неявные ожидания и `Thread.sleep`. Все синхронизации основаны на явных ожиданиях и наблюдаемом состоянии DOM.
 
@@ -59,12 +60,12 @@ Linux/macOS:
 ./mvnw clean test
 ```
 
-По умолчанию тесты запускаются последовательно в headless Chrome. Примеры параметров:
+По умолчанию параметры берутся из `src/test/resources/application.conf`. Системные параметры позволяют переопределить настройки запуска:
 
 ```powershell
 .\mvnw.cmd clean test "-Dbrowser=firefox"
 .\mvnw.cmd clean test "-Dheadless=false"
-.\mvnw.cmd clean test "-Dtimeout=20" "-DbaseUrl=https://practice-automation.com"
+.\mvnw.cmd clean test "-Dtimeout=20"
 ```
 
 | Параметр | По умолчанию | Назначение |
@@ -73,7 +74,6 @@ Linux/macOS:
 | `headless` | `true` | запуск без окна браузера |
 | `timeout` | `15` | ожидание элементов, секунды |
 | `pageLoadTimeout` | `40` | ожидание загрузки страницы, секунды |
-| `baseUrl` | `https://practice-automation.com` | адрес тестового стенда |
 
 ## Allure
 
@@ -172,4 +172,3 @@ Linux/macOS:
 ## CI
 
 GitHub Actions запускает полный набор в headless Chrome для каждого push и pull request. Даже при падении workflow сохраняет `allure-results`, статический Allure report и Surefire-отчёты как артефакты.
-
