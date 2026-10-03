@@ -110,7 +110,7 @@ class CalendarTests extends BaseUiTest {
         @ParameterizedTest(name = "{0} — валидную дату {1} можно ввести")
         @MethodSource("validDates")
         @Severity(SeverityLevel.BLOCKER)
-        void valid_dates_can_be_entered(String date) {
+        void valid_dates_can_be_entered(String scenarioId, String date) {
             calendar.enterDate(date);
             assertEquals(LocalDate.parse(date), calendar.selectedLocalDate());
         }
@@ -130,7 +130,7 @@ class CalendarTests extends BaseUiTest {
         @ParameterizedTest(name = "{0} — невалидная дата {1} не распознаётся как дата ISO")
         @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
-        void invalid_dates_are_not_interpreted_as_iso_dates(String invalidDate) {
+        void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {
             calendar.enterDate(invalidDate);
             assertAll(
                     () -> assertEquals(invalidDate, calendar.selectedDate()),
