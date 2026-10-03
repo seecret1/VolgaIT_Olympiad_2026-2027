@@ -172,6 +172,13 @@ JUnit 5 запускает классы и методы параллельно �
 4. Поле Message заполняется строкой `Selenium, Playwright, Cypress, Appium, Katalon Studio`.
 5. Тест отдельно проверяет исходный список, сформированную строку и фактическое значение поля.
 
-## CI
+## CI/CD
 
 GitHub Actions запускает полный набор в headless Chrome для каждого push и pull request. Даже при падении workflow сохраняет `allure-results`, статический Allure report и Surefire-отчёты как артефакты.
+
+Также в репозитории есть:
+
+- `.gitlab-ci.yml` — параллельные UI-тесты, JUnit-отчёт, артефакты и публикация статического Allure-отчёта через GitLab Pages из основной ветки;
+- `Jenkinsfile` — Declarative Pipeline в Docker-контейнере: компиляция, тесты, Allure и архивирование результатов с fingerprint.
+
+Для Jenkins нужны плагины Pipeline, Docker Pipeline и JUnit, а на агенте — Docker. GitLab Runner должен иметь доступ в интернет для Maven Central и тестового стенда.

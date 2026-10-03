@@ -1,0 +1,51 @@
+image: maven:3.9.11-eclipse-temurin-17
+
+stages:
+  - test
+  - deploy
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  MAVEN_CLI_OPTS: "--batch-mode --no-transfer-progress"
+
+cache:
+  key: maven
+  paths:
+    - .m2/repository
+
+.with-chromium:
+  before_script:
+    - apt-get update
+    - apt-get install --yes --no-install-recommends chromium || apt-get install --yes --no-install-recommends chromium-browser
+
+ui-tests:
+  extends: .with-chromium
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS clean test -Dheadless=true -Dbrowser=chrome
+  artifacts:
+    when: always
+    expire_in: 14 days
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
+    paths:
+      - target/allure-results/
+      - target/surefire-reports/
+
+allure-pages:
+  stage: deploy
+  needs:
+    - job: ui-tests
+      artifacts: true
+  script:
+    - mvn $MAVEN_CLI_OPTS allure:report
+    - rm -rf public
+    - mv target/site/allure-maven-plugin public
+    - test -f public/index.html
+  artifacts:
+    paths:
+      - public/
+  pages: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
