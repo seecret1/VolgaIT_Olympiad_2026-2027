@@ -74,6 +74,11 @@ public final class PopupComponent {
         return root.getAttribute(DomAttributes.ROLE);
     }
 
+    public boolean hasCssClass(String className) {
+        String classes = root.getAttribute(DomAttributes.CLASS);
+        return classes != null && List.of(classes.split("\\s+")).contains(className);
+    }
+
     void replaceValue(WebElement element, String value) {
         element = wait.until(ExpectedConditions.visibilityOf(element));
         ((JavascriptExecutor) driver).executeScript("""

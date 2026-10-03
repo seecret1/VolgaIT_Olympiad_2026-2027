@@ -32,10 +32,12 @@ public interface ConfigProvider {
     int CALENDAR_FIRST_DAY = CONFIG.getInt("calendar.firstDay");
     int CALENDAR_REQUIRED_LAST_DAY = CONFIG.getInt("calendar.requiredLastDay");
     int CALENDAR_MAX_DAYS = CONFIG.getInt("calendar.maxDays");
+    int CALENDAR_NAVIGATION_STEPS = CONFIG.getInt("calendar.navigationSteps");
     List<String> CALENDAR_VALID_DATES = CONFIG.getStringList("calendar.validDates");
     List<String> CALENDAR_INVALID_DATES = CONFIG.getStringList("calendar.invalidDates");
 
     String MODALS_HEADING = CONFIG.getString("modals.heading");
+    String MODALS_ROLE = CONFIG.getString("modals.role");
     String SIMPLE_MODAL_TITLE = CONFIG.getString("modals.simple.title");
     String SIMPLE_MODAL_TEXT = CONFIG.getString("modals.simple.text");
     String FORM_MODAL_TITLE = CONFIG.getString("modals.form.title");
@@ -51,6 +53,7 @@ public interface ConfigProvider {
     String ADS_TITLE = CONFIG.getString("ads.title");
     String ADS_MESSAGE = CONFIG.getString("ads.message");
     String ADS_ROLE = CONFIG.getString("ads.role");
+    String ADS_ACTIVE_CLASS = CONFIG.getString("ads.activeClass");
 
     List<String> AUTOMATION_TOOLS = CONFIG.getStringList("formFields.automationTools");
     String AUTOMATION_TOOLS_SEPARATOR = CONFIG.getString("formFields.separator");

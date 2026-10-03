@@ -120,6 +120,33 @@ class CalendarTests extends BaseUiTest {
                     .mapToObj(index -> Arguments.of(
                             "P%02d".formatted(index + 8), CALENDAR_VALID_DATES.get(index)));
         }
+
+        @Test
+        @Severity(SeverityLevel.CRITICAL)
+        @DisplayName("Очистка удаляет ранее введённую дату")
+        void date_can_be_cleared() {
+            calendar.enterDate(CALENDAR_VALID_DATES.get(0)).clearDate();
+            assertEquals("", calendar.selectedDate());
+        }
+
+        @Test
+        @Severity(SeverityLevel.CRITICAL)
+        @DisplayName("Можно выбрать последний доступный день текущего месяца")
+        void last_available_day_can_be_selected() {
+            int lastDay = calendar.selectLastAvailableDay();
+            assertEquals(lastDay, calendar.selectedLocalDate().getDayOfMonth());
+        }
+
+        @Test
+        @Severity(SeverityLevel.NORMAL)
+        @DisplayName("Переход на два месяца вперёд и назад возвращает исходный месяц")
+        void multiple_month_navigation_returns_to_initial_month() {
+            calendar.openCalendar();
+            String initial = calendar.displayedMonthAndYear();
+            IntStream.range(0, CALENDAR_NAVIGATION_STEPS).forEach(index -> calendar.nextMonth());
+            IntStream.range(0, CALENDAR_NAVIGATION_STEPS).forEach(index -> calendar.previousMonth());
+            assertEquals(initial, calendar.displayedMonthAndYear());
+        }
     }
 
     @Nested

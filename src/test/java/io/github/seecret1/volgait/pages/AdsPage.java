@@ -1,6 +1,7 @@
 package io.github.seecret1.volgait.pages;
 
 import io.github.seecret1.volgait.components.PopupComponent;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -43,5 +44,11 @@ public final class AdsPage extends BasePage {
 
     public PopupComponent waitForAd() {
         return ad.waitUntilVisible();
+    }
+
+    @Step("Перезагрузить страницу и дождаться повторного появления рекламы")
+    public PopupComponent reloadAndWaitForAd() {
+        driver.navigate().refresh();
+        return waitForAd();
     }
 }

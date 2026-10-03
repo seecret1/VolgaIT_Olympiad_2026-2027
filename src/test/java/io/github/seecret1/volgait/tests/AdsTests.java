@@ -87,6 +87,21 @@ class AdsTests extends BaseUiTest {
             ad.close();
             assertFalse(ad.isVisible());
         }
+
+        @Test
+        @DisplayName("Показанная реклама имеет активное состояние overlay")
+        void visible_ad_has_active_overlay_class() {
+            assertTrue(ads.waitForAd().hasCssClass(ADS_ACTIVE_CLASS));
+        }
+
+        @Test
+        @Severity(SeverityLevel.CRITICAL)
+        @DisplayName("После перезагрузки страницы реклама появляется повторно")
+        void ad_appears_again_after_page_reload() {
+            PopupComponent ad = ads.waitForAd();
+            ad.close();
+            assertTrue(ads.reloadAndWaitForAd().isVisible());
+        }
     }
 
     @Nested

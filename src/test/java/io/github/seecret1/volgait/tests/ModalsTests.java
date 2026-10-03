@@ -109,6 +109,36 @@ class ModalsTests extends BaseUiTest {
                     () -> assertEquals(data.message(), form.valueOf(ContactField.MESSAGE))
             );
         }
+
+        @Test
+        @DisplayName("Простое окно имеет семантическую роль диалога")
+        void simple_dialog_has_dialog_role() {
+            assertEquals(MODALS_ROLE, modals.openSimpleModal().role());
+        }
+
+        @Test
+        @DisplayName("Окно с формой имеет семантическую роль диалога")
+        void form_dialog_has_dialog_role() {
+            assertEquals(MODALS_ROLE, modals.openFormModal().role());
+        }
+
+        @Test
+        @Severity(SeverityLevel.CRITICAL)
+        @DisplayName("Кнопка закрытия скрывает модальное окно с формой")
+        void close_button_hides_form_dialog() {
+            PopupComponent form = modals.openFormModal();
+            form.close();
+            assertFalse(form.isVisible());
+        }
+
+        @Test
+        @Severity(SeverityLevel.CRITICAL)
+        @DisplayName("Простое модальное окно можно открыть повторно после закрытия")
+        void simple_dialog_can_be_reopened() {
+            PopupComponent simple = modals.openSimpleModal();
+            simple.close();
+            assertTrue(modals.openSimpleModal().isVisible());
+        }
     }
 
     @Nested

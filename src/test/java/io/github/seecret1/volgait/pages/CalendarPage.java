@@ -62,6 +62,12 @@ public final class CalendarPage extends BasePage {
         return this;
     }
 
+    @Step("Очистить поле даты")
+    public CalendarPage clearDate() {
+        replace(dateInput, "");
+        return this;
+    }
+
     @Step("Выбрать день {day} в текущем месяце")
     public CalendarPage selectDay(int day) {
         openCalendar();
@@ -71,6 +77,19 @@ public final class CalendarPage extends BasePage {
                 .orElseThrow(() -> new IllegalArgumentException("День недоступен для выбора: " + day));
         clickable(dayButton).click();
         return this;
+    }
+
+    @Step("Выбрать последний доступный день текущего месяца")
+    public int selectLastAvailableDay() {
+        openCalendar();
+        int lastDay = availableDays().stream().mapToInt(Integer::intValue).max()
+                .orElseThrow(() -> new IllegalStateException("В календаре нет доступных дней"));
+        WebElement dayButton = all(availableDays).stream()
+                .filter(element -> String.valueOf(lastDay).equals(element.getText().trim()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Последний день месяца не найден"));
+        clickable(dayButton).click();
+        return lastDay;
     }
 
     @Step("Перейти к следующему месяцу")

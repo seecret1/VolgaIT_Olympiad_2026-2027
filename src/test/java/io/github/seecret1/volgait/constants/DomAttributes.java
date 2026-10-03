@@ -10,9 +10,12 @@ public final class DomAttributes {
 
     public static final String ARIA_REQUIRED = "aria-required";
 
+    public static final String CLASS = "class";
+
     public static final String HREF = "href";
 
     public static final String TARGET = "target";
+
     public static final String TYPE = "type";
 
     private DomAttributes() {
