@@ -16,22 +16,24 @@ import java.util.List;
 import java.util.Set;
 
 public final class NavigationComponent {
+
     private final WebDriver driver;
+
     private final WebDriverWait wait;
 
     @FindBy(xpath = "//a[@data-hover='Blog']")
     private WebElement blogLink;
 
-    @FindBy(xpath = "//nav[contains(@class, 'breadcrumbs')]//a[normalize-space()='Home']")
+    @FindBy(xpath = "//a[normalize-space()='Home']")
     private WebElement homeLink;
 
-    @FindBy(xpath = "//div[contains(@class, 'entry-content')]//a[contains(@href, 'youtube.com/watch')]")
+    @FindBy(xpath = "//a[contains(@href, 'youtube.com/watch')]")
     private WebElement youtubeLink;
 
     @FindBy(id = "pum-1272")
     private List<WebElement> adPopups;
 
-    @FindBy(xpath = "//div[@id='pum-1272']//button[contains(@class, 'pum-close')]")
+    @FindBy(xpath = "//button[contains(@class, 'pum-close')]")
     private List<WebElement> adCloseButtons;
 
     public NavigationComponent(WebDriver driver) {
