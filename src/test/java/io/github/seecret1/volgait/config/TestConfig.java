@@ -7,12 +7,20 @@ public final class TestConfig {
     }
 
     public static String browser() {
-        return System.getProperty("browser", ConfigProvider.DEFAULT_BROWSER).trim().toLowerCase();
+        return System.getProperty("browser", ConfigProvider.DEFAULT_BROWSER).trim();
     }
 
     public static boolean headless() {
         return Boolean.parseBoolean(System.getProperty(
                 "headless", String.valueOf(ConfigProvider.DEFAULT_HEADLESS)));
+    }
+
+    public static String remoteUrl() {
+        return System.getProperty("remoteUrl", ConfigProvider.CONFIG.getString("runtime.remoteUrl")).trim();
+    }
+
+    public static String browserBinary() {
+        return System.getProperty("browserBinary", ConfigProvider.CONFIG.getString("runtime.browserBinary")).trim();
     }
 
     public static Duration timeout() {

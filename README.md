@@ -18,7 +18,7 @@
 - JUnit 5;
 - Maven;
 - Allure;
-- Chrome и Firefox через Selenium Manager.
+- Chrome, Firefox, Edge и Safari через Selenium Manager / Selenium Grid.
 
 ## Архитектура
 
@@ -71,7 +71,9 @@ Linux/macOS:
 
 | Параметр | По умолчанию | Назначение |
 |---|---:|---|
-| `browser` | `chrome` | `chrome` или `firefox` |
+| `browser` | `chrome` | `chrome`, `firefox`, `edge` или `safari` |
+| `remoteUrl` | пусто | URL Selenium Grid; пустое значение означает локальный запуск |
+| `browserBinary` | пусто | путь к браузеру Chrome/Firefox/Edge (на узле Grid при удалённом запуске) |
 | `headless` | `true` | запуск без окна браузера |
 | `timeout` | `15` | ожидание элементов, секунды |
 | `pageLoadTimeout` | `40` | ожидание загрузки страницы, секунды |
@@ -79,6 +81,23 @@ Linux/macOS:
 JUnit 5 запускает тестовые классы параллельно в фиксированном пуле из 2 потоков, а сценарии внутри одного класса — последовательно. Такой режим ускоряет набор, не перегружая внешний тестовый стенд и локальный Chrome. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`.
 
 ## Allure
+
+Для проверки в нескольких браузерах выполните отдельный прогон для каждого:
+
+```powershell
+foreach ($browser in 'chrome', 'firefox', 'edge') {
+    .\mvnw.cmd test "-Dbrowser=$browser"
+    if ($LASTEXITCODE -ne 0) { throw "Tests failed: $browser" }
+}
+```
+
+Каждый запуск выполняет весь набор в выбранном браузере. Allure сохраняет результаты всех запусков до `clean`.
+Safari запускается на macOS с включённым Remote Automation (`safaridriver --enable`), с `-Dbrowser=safari -Dheadless=false`.
+Для удалённых браузеров добавьте `-DremoteUrl=http://localhost:4444`; браузер должен быть доступен на соответствующем узле Grid.
+Параметр `browserBinary` позволяет использовать совместимый Chromium-браузер через режим `chrome`, но совместимость его версии с ChromeDriver нужно проверять отдельно.
+Docker-образ включает только Chrome; для других браузеров используйте установленный браузер на хосте либо Grid.
+
+## Отчёт
 
 Результаты создаются в `target/allure-results`. Для локального просмотра:
 

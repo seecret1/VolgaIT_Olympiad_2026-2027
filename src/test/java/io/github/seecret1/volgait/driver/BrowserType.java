@@ -1,16 +1,19 @@
 package io.github.seecret1.volgait.driver;
 
+import java.util.Locale;
+
 public enum BrowserType {
     CHROME,
-    FIREFOX;
+    FIREFOX,
+    EDGE,
+    SAFARI;
 
     public static BrowserType from(String value) {
         try {
-            return valueOf(value.toUpperCase());
+            return valueOf(value.trim().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException(
-                    "Unsupported browser '%s'. Use chrome or firefox.".formatted(value), exception);
+                    "Unsupported browser '%s'. Use chrome, firefox, edge or safari.".formatted(value), exception);
         }
     }
 }
-
