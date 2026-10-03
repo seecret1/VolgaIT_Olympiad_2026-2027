@@ -24,7 +24,7 @@
 
 В проекте осознанно сочетаются несколько паттернов:
 
-- **Page Object** — `CalendarPage`, `ModalsPage`, `AdsPage`, `FormFieldsPage` скрывают локаторы и действия страниц;
+- **Page Object** — `CalendarPage`, `ModalsPage`, `AdsPage`, `FormFieldsPage` скрывают локаторы и действия страниц; элементы объявлены через Selenium `@FindBy` и инициализируются `PageFactory`;
 - **Component Object** — `PopupComponent` и `ContactFormComponent` моделируют переиспользуемые части интерфейса;
 - **Factory** — `DriverFactory` централизованно создаёт Chrome/Firefox с едиными настройками;
 - **Builder** — `ContactData.Builder` создаёт читаемые тестовые данные формы;

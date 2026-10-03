@@ -1,7 +1,7 @@
 package io.github.seecret1.volgait.components;
 
+import io.github.seecret1.volgait.config.TestConfig;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -10,29 +10,36 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
+import java.util.List;
 
 public class PopupComponent {
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final By root;
+    private final WebElement root;
+    private final WebElement title;
+    private final WebElement content;
+    private final WebElement closeButton;
 
-    public PopupComponent(WebDriver driver, By root, Duration timeout) {
+    public PopupComponent(WebDriver driver, WebElement root, WebElement title,
+                          WebElement content, WebElement closeButton) {
         this.driver = driver;
         this.root = root;
-        this.wait = new WebDriverWait(driver, timeout);
+        this.title = title;
+        this.content = content;
+        this.closeButton = closeButton;
+        this.wait = new WebDriverWait(driver, TestConfig.timeout());
     }
 
     @Step("Wait until popup is visible")
     public PopupComponent waitUntilVisible() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(root));
+        wait.until(ExpectedConditions.visibilityOf(root));
         return this;
     }
 
     @Step("Close popup")
     public void close() {
-        container().findElement(By.cssSelector("button.pum-close")).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(root));
+        wait.until(ExpectedConditions.elementToBeClickable(closeButton)).click();
+        wait.until(ExpectedConditions.invisibilityOf(root));
     }
 
     @Step("Press Escape in popup")
@@ -41,31 +48,31 @@ public class PopupComponent {
     }
 
     public boolean isVisible() {
-        return driver.findElements(root).stream().anyMatch(WebElement::isDisplayed);
+        return root.isDisplayed();
     }
 
     public String title() {
-        return nestedVisible(By.cssSelector(".pum-title")).getText().trim();
+        return wait.until(ExpectedConditions.visibilityOf(title)).getText().trim();
     }
 
     public String content() {
-        return nestedVisible(By.cssSelector(".pum-content")).getText().trim();
+        return wait.until(ExpectedConditions.visibilityOf(content)).getText().trim();
     }
 
     public boolean closeButtonIsDisplayed() {
-        return nestedVisible(By.cssSelector("button.pum-close")).isDisplayed();
+        return wait.until(ExpectedConditions.visibilityOf(closeButton)).isDisplayed();
     }
 
     public String role() {
-        return driver.findElement(root).getAttribute("role");
+        return root.getAttribute("role");
     }
 
     public WebElement container() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(root));
+        return wait.until(ExpectedConditions.visibilityOf(root));
     }
 
-    public void replaceValue(By child, String value) {
-        WebElement element = nestedVisible(child);
+    public void replaceValue(WebElement element, String value) {
+        element = wait.until(ExpectedConditions.visibilityOf(element));
         ((JavascriptExecutor) driver).executeScript("""
                 const element = arguments[0];
                 const value = arguments[1];
@@ -79,10 +86,8 @@ public class PopupComponent {
         wait.until(ExpectedConditions.attributeToBe(element, "value", value));
     }
 
-    public String waitForNonBlankText(By child) {
-        return wait.until(current -> current.findElements(root).stream()
-                .filter(WebElement::isDisplayed)
-                .flatMap(container -> container.findElements(child).stream())
+    public String waitForNonBlankText(List<WebElement> elements) {
+        return wait.until(current -> elements.stream()
                 .filter(WebElement::isDisplayed)
                 .map(WebElement::getText)
                 .filter(text -> !text.isBlank())
@@ -90,7 +95,4 @@ public class PopupComponent {
                 .orElse(null));
     }
 
-    private WebElement nestedVisible(By child) {
-        return wait.until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(root, child)).get(0);
-    }
 }

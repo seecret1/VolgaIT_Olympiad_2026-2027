@@ -1,13 +1,14 @@
 package io.github.seecret1.volgait.pages;
 
 import io.github.seecret1.volgait.config.TestConfig;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
@@ -15,43 +16,38 @@ public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
+    @FindBy(css = "h1[itemprop='headline']")
+    private WebElement heading;
+
     protected BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, TestConfig.timeout());
+        PageFactory.initElements(driver, this);
     }
 
-    protected WebElement visible(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    protected WebElement visible(WebElement element) {
+        return wait.until(ExpectedConditions.visibilityOf(element));
     }
 
-    protected WebElement clickable(By locator) {
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
+    protected WebElement clickable(WebElement element) {
+        return wait.until(ExpectedConditions.elementToBeClickable(element));
     }
 
-    protected boolean invisible(By locator) {
-        return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    protected List<WebElement> all(List<WebElement> elements) {
+        return wait.until(current -> elements.isEmpty() ? null : elements);
     }
 
-    protected List<WebElement> all(By locator) {
-        return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
-    }
-
-    protected void replace(By locator, String value) {
-        WebElement element = visible(locator);
+    protected void replace(WebElement element, String value) {
+        element = visible(element);
         element.sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
     }
 
-    protected boolean isDisplayed(By locator) {
-        return driver.findElements(locator).stream().anyMatch(WebElement::isDisplayed);
-    }
-
     protected String pageHeading() {
-        return visible(By.cssSelector("h1[itemprop='headline']")).getText().trim();
+        return visible(heading).getText().trim();
     }
 
-    protected void scrollIntoView(By locator) {
+    protected void scrollIntoView(WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView({block: 'center'});", visible(locator));
+                "arguments[0].scrollIntoView({block: 'center'});", visible(element));
     }
 }
-
