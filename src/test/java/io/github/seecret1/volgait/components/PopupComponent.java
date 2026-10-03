@@ -14,11 +14,17 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public final class PopupComponent {
+
     private final WebDriver driver;
+
     private final WebDriverWait wait;
+
     private final WebElement root;
+
     private final WebElement title;
+
     private final WebElement content;
+
     private final WebElement closeButton;
 
     public PopupComponent(WebDriver driver, WebElement root, WebElement title,

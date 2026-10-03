@@ -12,7 +12,9 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.List;
 
 public abstract class BasePage {
+
     protected final WebDriver driver;
+
     protected final WebDriverWait wait;
 
     @FindBy(xpath = "//h1[@itemprop='headline']")

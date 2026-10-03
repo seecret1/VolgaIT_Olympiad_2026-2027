@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Isolated("Временно изменяет системные параметры браузера")
 @DisplayName("Фабрика браузеров")
 class DriverFactoryTest {
+
     private final Map<String, String> previous = new HashMap<>();
 
     @BeforeEach

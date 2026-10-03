@@ -3,9 +3,13 @@ package io.github.seecret1.volgait.driver;
 import java.util.Locale;
 
 public enum BrowserType {
+
     CHROME,
+
     FIREFOX,
+
     EDGE,
+
     SAFARI;
 
     public static BrowserType from(String value) {

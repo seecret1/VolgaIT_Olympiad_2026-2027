@@ -9,13 +9,21 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public final class ContactFormComponent {
+
     private final PopupComponent popup;
+
     private final WebElement name;
+
     private final WebElement email;
+
     private final WebElement message;
+
     private final WebElement submitButton;
+
     private final List<WebElement> nameErrors;
+
     private final List<WebElement> emailErrors;
+
     private final List<WebElement> messageErrors;
 
     public ContactFormComponent(PopupComponent popup, WebElement name, WebElement email,

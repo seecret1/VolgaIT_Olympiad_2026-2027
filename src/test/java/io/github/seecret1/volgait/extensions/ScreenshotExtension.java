@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public final class ScreenshotExtension implements TestExecutionExceptionHandler {
+
     private final Supplier<WebDriver> driverSupplier;
 
     public ScreenshotExtension(Supplier<WebDriver> driverSupplier) {

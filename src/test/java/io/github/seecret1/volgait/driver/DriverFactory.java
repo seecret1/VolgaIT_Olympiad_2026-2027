@@ -21,6 +21,7 @@ import java.time.Duration;
 import java.util.Locale;
 
 public final class DriverFactory {
+
     private static final String DISABLE_POPUPS = "--disable-popup-blocking";
     private static final String DISABLE_NOTIFICATIONS = "--disable-notifications";
     private static final String WINDOW_SIZE = "--window-size=1440,1000";
