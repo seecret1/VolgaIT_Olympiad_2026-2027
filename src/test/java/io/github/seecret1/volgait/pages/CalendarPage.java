@@ -13,7 +13,7 @@ import java.util.List;
 public final class CalendarPage extends BasePage {
     private static final By DATE_INPUT = By.cssSelector("input.jp-contact-form-date");
     private static final By FORMAT_HINT = By.cssSelector(".contact-form__field-format");
-    private static final By DATE_PICKER = By.id("ui-datepicker-div");
+    private static final By DATE_PICKER = By.cssSelector(".dp-below, .dp-above");
     private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
     public CalendarPage(WebDriver driver) {
@@ -41,20 +41,20 @@ public final class CalendarPage extends BasePage {
     @Step("Select day {day} in the current calendar month")
     public CalendarPage selectDay(int day) {
         openCalendar();
-        By dayLink = By.xpath("//div[@id='ui-datepicker-div']//td[not(contains(@class,'ui-datepicker-other-month'))]/a[normalize-space()='" + day + "']");
+        By dayLink = By.xpath("//*[contains(@class,'dp-below') or contains(@class,'dp-above')]//button[contains(@class,'dp-day') and not(contains(@class,'dp-edge-day')) and normalize-space()='" + day + "']");
         clickable(dayLink).click();
         return this;
     }
 
     @Step("Go to next calendar month")
     public CalendarPage nextMonth() {
-        clickable(By.cssSelector("#ui-datepicker-div .ui-datepicker-next")).click();
+        clickable(By.cssSelector(".dp-next")).click();
         return this;
     }
 
     @Step("Go to previous calendar month")
     public CalendarPage previousMonth() {
-        clickable(By.cssSelector("#ui-datepicker-div .ui-datepicker-prev")).click();
+        clickable(By.cssSelector(".dp-prev")).click();
         return this;
     }
 
@@ -71,11 +71,13 @@ public final class CalendarPage extends BasePage {
     }
 
     public String displayedMonthAndYear() {
-        return visible(By.cssSelector("#ui-datepicker-div .ui-datepicker-title")).getText().trim();
+        String month = visible(By.cssSelector(".dp-cal-month")).getText().trim();
+        String year = visible(By.cssSelector(".dp-cal-year")).getText().trim();
+        return month + " " + year;
     }
 
     public List<Integer> availableDays() {
-        return all(By.cssSelector("#ui-datepicker-div td:not(.ui-datepicker-other-month) a"))
+        return all(By.cssSelector(".dp-day:not(.dp-edge-day):not(.dp-day-disabled)"))
                 .stream().map(WebElement::getText).map(Integer::parseInt).toList();
     }
 
@@ -88,4 +90,3 @@ public final class CalendarPage extends BasePage {
         return LocalDate.parse(selectedDate(), ISO_DATE);
     }
 }
-

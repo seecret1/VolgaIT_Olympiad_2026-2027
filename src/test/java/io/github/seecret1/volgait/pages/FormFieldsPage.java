@@ -12,6 +12,7 @@ import java.util.List;
 public final class FormFieldsPage extends BasePage {
     private static final By MESSAGE = By.id("message");
     private static final By TOOLS = By.xpath("//label[normalize-space()='Automation tools']/following-sibling::ul[1]/li");
+    private static final By SUBMIT = By.id("submit-btn");
 
     public FormFieldsPage(WebDriver driver) {
         super(driver);
@@ -37,7 +38,8 @@ public final class FormFieldsPage extends BasePage {
 
     @Step("Submit feedback form")
     public Alert submit() {
-        clickable(By.id("submit-btn")).click();
+        scrollIntoView(SUBMIT);
+        clickable(SUBMIT).click();
         return wait.until(ExpectedConditions.alertIsPresent());
     }
 

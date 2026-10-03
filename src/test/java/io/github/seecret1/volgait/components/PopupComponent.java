@@ -5,6 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -35,7 +36,7 @@ public class PopupComponent {
 
     @Step("Press Escape in popup")
     public void pressEscape() {
-        container().sendKeys(Keys.ESCAPE);
+        new Actions(driver).sendKeys(Keys.ESCAPE).perform();
     }
 
     public boolean isVisible() {
@@ -43,15 +44,15 @@ public class PopupComponent {
     }
 
     public String title() {
-        return container().findElement(By.cssSelector(".pum-title")).getText().trim();
+        return nestedVisible(By.cssSelector(".pum-title")).getText().trim();
     }
 
     public String content() {
-        return container().findElement(By.cssSelector(".pum-content")).getText().trim();
+        return nestedVisible(By.cssSelector(".pum-content")).getText().trim();
     }
 
     public boolean closeButtonIsDisplayed() {
-        return container().findElement(By.cssSelector("button.pum-close")).isDisplayed();
+        return nestedVisible(By.cssSelector("button.pum-close")).isDisplayed();
     }
 
     public String role() {
@@ -61,5 +62,8 @@ public class PopupComponent {
     public WebElement container() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(root));
     }
-}
 
+    private WebElement nestedVisible(By child) {
+        return wait.until(ExpectedConditions.visibilityOfNestedElementsLocatedBy(root, child)).get(0);
+    }
+}
