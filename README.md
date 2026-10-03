@@ -7,10 +7,10 @@
 - [Calendars](https://practice-automation.com/calendars/) — 10 позитивных и 4 негативных сценария;
 - [Modals](https://practice-automation.com/modals/) — 9 позитивных и 4 негативных сценария;
 - [Ads](https://practice-automation.com/ads/) — 8 позитивных и 3 негативных сценария;
-- [Form Fields](https://practice-automation.com/form-fields/) — отдельный обязательный сценарий переноса списка Automation Tools в Message средствами Selenium.
+- [Form Fields](https://practice-automation.com/form-fields/) — 18 проверок текстовых полей, checkbox, radio, select, валидации и отправки формы, включая обязательный перенос Automation Tools.
 - общая навигация Calendars, Modals и Ads — переходы по ссылкам Blog, Home и YouTube (9 параметризованных проверок).
 
-Всего: **48 UI-автотестов** и **7 проверок фабрики браузеров**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
+Всего: **65 UI-автотестов** и **7 проверок фабрики браузеров**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
 
 ## Стек
 
@@ -227,13 +227,19 @@ docker run --rm --shm-size=2g volgait-ui-tests \
 | N02 | Нажать Escape | Реклама не закрывается согласно конфигурации |
 | N03 | Попытаться обработать рекламу как browser alert | Selenium подтверждает, что это DOM modal, а не alert |
 
-### Обязательный сценарий Form Fields
+### Form Fields
 
-1. Selenium находит все `li` из раздела **Automation tools**.
-2. Тексты элементов собираются в список: `Selenium`, `Playwright`, `Cypress`, `Appium`, `Katalon Studio`.
-3. Список соединяется через запятую и пробел.
-4. Поле Message заполняется строкой `Selenium, Playwright, Cypress, Appium, Katalon Studio`.
-5. Тест отдельно проверяет исходный список, сформированную строку и фактическое значение поля.
+Набор содержит 18 отдельных запусков:
+
+- обязательный перенос списка Automation Tools в Message через запятую;
+- проверка заголовка страницы;
+- ввод только цифр, цифр через двойной и тройной пробел в Name и Message;
+- маскирование и сохранение Password;
+- одновременный выбор нескольких checkbox любимых напитков;
+- взаимоисключающий выбор каждого из пяти цветов через radio;
+- состав и выбор значения списка Automation;
+- блокировка отправки при пустом обязательном Name;
+- alert успешной отправки и полный сброс заполненных полей.
 
 ## CI/CD
 

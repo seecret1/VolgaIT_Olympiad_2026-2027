@@ -13,6 +13,7 @@ public final class DomAttributes {
     public static final String HREF = "href";
 
     public static final String TARGET = "target";
+    public static final String TYPE = "type";
 
     private DomAttributes() {
     }

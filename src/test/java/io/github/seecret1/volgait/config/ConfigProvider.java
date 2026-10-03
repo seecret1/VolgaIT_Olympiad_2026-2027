@@ -54,4 +54,15 @@ public interface ConfigProvider {
 
     List<String> AUTOMATION_TOOLS = CONFIG.getStringList("formFields.automationTools");
     String AUTOMATION_TOOLS_SEPARATOR = CONFIG.getString("formFields.separator");
+    String FORM_FIELDS_HEADING = CONFIG.getString("formFields.heading");
+    String FORM_FIELDS_NUMBERS = CONFIG.getString("formFields.inputValues.numbers");
+    String FORM_FIELDS_DOUBLE_SPACE = CONFIG.getString("formFields.inputValues.doubleSpace");
+    String FORM_FIELDS_TRIPLE_SPACE = CONFIG.getString("formFields.inputValues.tripleSpace");
+    String FORM_FIELDS_PASSWORD = CONFIG.getString("formFields.password");
+    String FORM_FIELDS_EMAIL = CONFIG.getString("formFields.email");
+    List<String> FORM_FIELDS_DRINKS = CONFIG.getStringList("formFields.drinks");
+    List<String> FORM_FIELDS_COLORS = CONFIG.getStringList("formFields.colors");
+    List<String> FORM_FIELDS_AUTOMATION_OPTIONS = CONFIG.getStringList("formFields.automationOptions");
+    String FORM_FIELDS_AUTOMATION_SELECTION = CONFIG.getString("formFields.automationSelection");
+    String FORM_FIELDS_ALERT_TEXT = CONFIG.getString("formFields.alertText");
 }
