@@ -8,8 +8,9 @@
 - [Modals](https://practice-automation.com/modals/) — 9 позитивных и 4 негативных сценария;
 - [Ads](https://practice-automation.com/ads/) — 8 позитивных и 3 негативных сценария;
 - [Form Fields](https://practice-automation.com/form-fields/) — отдельный обязательный сценарий переноса списка Automation Tools в Message средствами Selenium.
+- общая навигация Calendars, Modals и Ads — переходы по ссылкам Blog, Home и YouTube (9 параметризованных проверок).
 
-Всего: **39 UI-автотестов** и **7 проверок фабрики браузеров**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
+Всего: **48 UI-автотестов** и **7 проверок фабрики браузеров**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
 
 ## Стек
 
@@ -25,7 +26,7 @@
 В проекте осознанно сочетаются несколько паттернов:
 
 - **Page Object** — `CalendarPage`, `ModalsPage`, `AdsPage`, `FormFieldsPage` скрывают локаторы и действия страниц; элементы объявлены через Selenium `@FindBy` и инициализируются `PageFactory`;
-- **Component Object** — `PopupComponent` и `ContactFormComponent` моделируют переиспользуемые части интерфейса;
+- **Component Object** — `PopupComponent`, `ContactFormComponent` и `NavigationComponent` моделируют переиспользуемые части интерфейса;
 - **Factory** — `DriverFactory` централизованно создаёт Chrome, Firefox, Edge и Safari с едиными настройками;
 - **Builder** — `ContactData.Builder` создаёт читаемые тестовые данные формы;
 - **JUnit Extension** — `ScreenshotExtension` прикладывает скриншот, HTML страницы и причину к Allure до закрытия браузера.
@@ -82,7 +83,7 @@ Linux/macOS:
 | `timeout` | `15` | ожидание элементов, секунды |
 | `pageLoadTimeout` | `40` | ожидание загрузки страницы, секунды |
 
-JUnit 5 запускает тестовые классы и отдельные сценарии параллельно в фиксированном пуле из 4 потоков. Каждый сценарий получает собственный экземпляр WebDriver, поэтому браузерные сессии изолированы друг от друга. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`; при увеличении также задайте такое же значение для `junit.jupiter.execution.parallel.config.fixed.max-pool-size`.
+JUnit 5 запускает тестовые классы и отдельные сценарии параллельно в фиксированном пуле из 6 потоков. Каждый сценарий получает собственный экземпляр WebDriver, поэтому браузерные сессии изолированы друг от друга. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`; при изменении также задайте такое же значение для `junit.jupiter.execution.parallel.config.fixed.max-pool-size`.
 
 ## Allure
 
@@ -145,6 +146,18 @@ docker run --rm --shm-size=2g volgait-ui-tests \
 После запуска Allure results и Surefire reports доступны в локальном каталоге `target`, если он подключён как volume.
 
 ## Тестовые сценарии
+
+### Общая навигация Calendars, Modals и Ads
+
+Каждая из трёх проверок параметризована страницами Calendars, Modals и Ads — всего 9 отдельных запусков:
+
+| ID | Проверка | Ожидаемый результат |
+|---|---|---|
+| NAV01 | Нажать кнопку `Blog` в шапке | Проверен исходный `href`, открывается сайт `automatenow.io` |
+| NAV02 | Нажать ссылку `Home` рядом с названием страницы | Проверен исходный `href`, открывается главная страница Practice Automation |
+| NAV03 | Нажать ссылку на YouTube-ролик в описании | Проверены `href` и `target=_blank`, ролик открывается в новой вкладке |
+
+Если ссылка YouTube неверна или новая вкладка не открылась, тест падает. Если ссылка корректна, но внешний сервис не смог загрузить сам ролик, тест получает статус `Skipped` с причиной в Allure — временная недоступность YouTube не маскирует дефект навигации сайта.
 
 ### Calendars — позитивные
 

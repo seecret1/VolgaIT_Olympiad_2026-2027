@@ -16,6 +16,11 @@ public interface ConfigProvider {
     String URL_MODALS = CONFIG.getString("urls.modals");
     String URL_ADS = CONFIG.getString("urls.ads");
     String URL_FORM_FIELDS = CONFIG.getString("urls.formFields");
+    String URL_HOME = CONFIG.getString("urls.home");
+    String URL_BLOG = CONFIG.getString("urls.blog");
+    String URL_YOUTUBE_CALENDARS = CONFIG.getString("urls.youtube.calendars");
+    String URL_YOUTUBE_MODALS = CONFIG.getString("urls.youtube.modals");
+    String URL_YOUTUBE_ADS = CONFIG.getString("urls.youtube.ads");
 
     String DEFAULT_BROWSER = CONFIG.getString("runtime.browser");
     boolean DEFAULT_HEADLESS = CONFIG.getBoolean("runtime.headless");
