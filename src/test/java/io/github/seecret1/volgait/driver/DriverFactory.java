@@ -1,25 +1,34 @@
 package io.github.seecret1.volgait.driver;
 
 import io.github.seecret1.volgait.config.TestConfig;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.safari.SafariOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.safari.SafariOptions;
 
-import java.time.Duration;
-import java.net.URI;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.time.Duration;
 import java.util.Locale;
 
 public final class DriverFactory {
+    private static final String DISABLE_POPUPS = "--disable-popup-blocking";
+    private static final String DISABLE_NOTIFICATIONS = "--disable-notifications";
+    private static final String WINDOW_SIZE = "--window-size=1440,1000";
+    private static final String HEADLESS = "--headless=new";
+    private static final String NO_SANDBOX = "--no-sandbox";
+    private static final String DISABLE_SHARED_MEMORY = "--disable-dev-shm-usage";
+    private static final Dimension WINDOW = new Dimension(1440, 1000);
+
     private DriverFactory() {
     }
 
@@ -36,7 +45,7 @@ public final class DriverFactory {
         try {
             driver.manage().timeouts().implicitlyWait(Duration.ZERO);
             driver.manage().timeouts().pageLoadTimeout(TestConfig.pageLoadTimeout());
-            driver.manage().window().setSize(new org.openqa.selenium.Dimension(1440, 1000));
+            driver.manage().window().setSize(WINDOW);
             return driver;
         } catch (RuntimeException exception) {
             try {
@@ -71,9 +80,9 @@ public final class DriverFactory {
             options.setBinary(TestConfig.browserBinary());
         }
         options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-        options.addArguments("--disable-popup-blocking", "--disable-notifications", "--window-size=1440,1000");
+        options.addArguments(DISABLE_POPUPS, DISABLE_NOTIFICATIONS, WINDOW_SIZE);
         if (TestConfig.headless()) {
-            options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
+            options.addArguments(HEADLESS, NO_SANDBOX, DISABLE_SHARED_MEMORY);
         }
         return options;
     }
@@ -98,9 +107,9 @@ public final class DriverFactory {
         if (!TestConfig.browserBinary().isEmpty()) {
             options.setBinary(TestConfig.browserBinary());
         }
-        options.addArguments("--disable-popup-blocking", "--disable-notifications", "--window-size=1440,1000");
+        options.addArguments(DISABLE_POPUPS, DISABLE_NOTIFICATIONS, WINDOW_SIZE);
         if (TestConfig.headless()) {
-            options.addArguments("--headless=new", "--no-sandbox", "--disable-dev-shm-usage");
+            options.addArguments(HEADLESS, NO_SANDBOX, DISABLE_SHARED_MEMORY);
         }
         return options;
     }

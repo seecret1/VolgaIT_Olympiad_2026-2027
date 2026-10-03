@@ -1,5 +1,8 @@
 package io.github.seecret1.volgait.tests;
 
+import io.github.seecret1.volgait.constants.TestMetadata;
+import io.github.seecret1.volgait.model.ContactField;
+
 import io.github.seecret1.volgait.components.ContactFormComponent;
 import io.github.seecret1.volgait.components.PopupComponent;
 import io.github.seecret1.volgait.model.ContactData;
@@ -17,7 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("VolgaIT semifinal")
+@Epic(TestMetadata.EPIC)
 @Feature("Modals")
 @DisplayName("Modals page")
 class ModalsTests extends BaseUiTest {
@@ -31,7 +34,7 @@ class ModalsTests extends BaseUiTest {
 
     @Nested
     @Story("Positive modal scenarios")
-    @Tag("positive")
+    @Tag(TestMetadata.POSITIVE)
     class Positive {
         @Test
         @DisplayName("P01 — page has the Modals heading")
@@ -99,16 +102,16 @@ class ModalsTests extends BaseUiTest {
             ContactFormComponent form = modals.contactForm().fill(data);
 
             assertAll(
-                    () -> assertEquals(data.name(), form.valueOf("name")),
-                    () -> assertEquals(data.email(), form.valueOf("email")),
-                    () -> assertEquals(data.message(), form.valueOf("message"))
+                    () -> assertEquals(data.name(), form.valueOf(ContactField.NAME)),
+                    () -> assertEquals(data.email(), form.valueOf(ContactField.EMAIL)),
+                    () -> assertEquals(data.message(), form.valueOf(ContactField.MESSAGE))
             );
         }
     }
 
     @Nested
     @Story("Negative modal scenarios")
-    @Tag("negative")
+    @Tag(TestMetadata.NEGATIVE)
     class Negative {
         @Test
         @DisplayName("N01 — Escape does not close the simple modal by configuration")
@@ -133,7 +136,7 @@ class ModalsTests extends BaseUiTest {
             modals.openFormModal();
             ContactFormComponent form = modals.contactForm();
             form.submit();
-            assertFalse(form.errorText("name").isBlank());
+            assertFalse(form.errorText(ContactField.NAME).isBlank());
         }
 
         @Test
@@ -147,7 +150,7 @@ class ModalsTests extends BaseUiTest {
                     .message(INVALID_FORM_MESSAGE)
                     .build());
             form.submit();
-            assertFalse(form.errorText("email").isBlank());
+            assertFalse(form.errorText(ContactField.EMAIL).isBlank());
         }
     }
 }

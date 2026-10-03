@@ -1,6 +1,8 @@
 package io.github.seecret1.volgait.components;
 
+import io.github.seecret1.volgait.constants.DomAttributes;
 import io.github.seecret1.volgait.model.ContactData;
+import io.github.seecret1.volgait.model.ContactField;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 
@@ -40,39 +42,32 @@ public final class ContactFormComponent {
 
     @Step("Submit contact form")
     public void submit() {
-        submitButton.click();
+        popup.click(submitButton);
     }
 
-    public String valueOf(String field) {
+    public String valueOf(ContactField field) {
         WebElement element = switch (field) {
-            case "name" -> name;
-            case "email" -> email;
-            case "message" -> message;
-            default -> throw new IllegalArgumentException("Unknown field: " + field);
+            case NAME -> name;
+            case EMAIL -> email;
+            case MESSAGE -> message;
         };
-        return element.getAttribute("value");
+        return element.getAttribute(DomAttributes.VALUE);
     }
 
     public boolean requiredNameIsMarked() {
-        return Boolean.parseBoolean(name.getAttribute("required"))
-                && "true".equals(name.getAttribute("aria-required"));
+        return Boolean.parseBoolean(name.getAttribute(DomAttributes.REQUIRED))
+                && "true".equals(name.getAttribute(DomAttributes.ARIA_REQUIRED));
     }
 
-    public boolean validationErrorIsVisible(String field) {
-        return errorsFor(field).stream()
-                .anyMatch(element -> element.isDisplayed() && !element.getText().isBlank());
-    }
-
-    public String errorText(String field) {
+    public String errorText(ContactField field) {
         return popup.waitForNonBlankText(errorsFor(field));
     }
 
-    private List<WebElement> errorsFor(String field) {
+    private List<WebElement> errorsFor(ContactField field) {
         return switch (field) {
-            case "name" -> nameErrors;
-            case "email" -> emailErrors;
-            case "message" -> messageErrors;
-            default -> throw new IllegalArgumentException("Unknown field: " + field);
+            case NAME -> nameErrors;
+            case EMAIL -> emailErrors;
+            case MESSAGE -> messageErrors;
         };
     }
 }

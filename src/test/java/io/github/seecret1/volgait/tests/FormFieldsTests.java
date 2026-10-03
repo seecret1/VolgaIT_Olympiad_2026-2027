@@ -1,5 +1,7 @@
 package io.github.seecret1.volgait.tests;
 
+import io.github.seecret1.volgait.constants.TestMetadata;
+
 import io.github.seecret1.volgait.pages.FormFieldsPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -13,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Epic("VolgaIT semifinal")
+@Epic(TestMetadata.EPIC)
 @Feature("Mandatory Automation Tools scenario")
 @DisplayName("Form Fields page")
 class FormFieldsTests extends BaseUiTest {

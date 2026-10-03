@@ -1,5 +1,7 @@
 package io.github.seecret1.volgait.tests;
 
+import io.github.seecret1.volgait.constants.TestMetadata;
+
 import io.github.seecret1.volgait.pages.CalendarPage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -23,7 +25,7 @@ import org.junit.jupiter.params.provider.Arguments;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("VolgaIT semifinal")
+@Epic(TestMetadata.EPIC)
 @Feature("Calendar")
 @DisplayName("Calendar page")
 class CalendarTests extends BaseUiTest {
@@ -37,7 +39,7 @@ class CalendarTests extends BaseUiTest {
 
     @Nested
     @Story("Positive calendar scenarios")
-    @Tag("positive")
+    @Tag(TestMetadata.POSITIVE)
     class Positive {
         @Test
         @Severity(SeverityLevel.NORMAL)
@@ -120,7 +122,7 @@ class CalendarTests extends BaseUiTest {
 
     @Nested
     @Story("Negative calendar scenarios")
-    @Tag("negative")
+    @Tag(TestMetadata.NEGATIVE)
     class Negative {
         @ParameterizedTest(name = "{0} — invalid date {1} is not interpreted as ISO date")
         @MethodSource("invalidDates")

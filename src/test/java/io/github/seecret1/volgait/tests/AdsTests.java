@@ -1,5 +1,7 @@
 package io.github.seecret1.volgait.tests;
 
+import io.github.seecret1.volgait.constants.TestMetadata;
+
 import io.github.seecret1.volgait.components.PopupComponent;
 import io.github.seecret1.volgait.pages.AdsPage;
 import io.qameta.allure.Epic;
@@ -16,7 +18,7 @@ import org.openqa.selenium.NoAlertPresentException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Epic("VolgaIT semifinal")
+@Epic(TestMetadata.EPIC)
 @Feature("Advertising popup")
 @DisplayName("Ads page")
 class AdsTests extends BaseUiTest {
@@ -30,7 +32,7 @@ class AdsTests extends BaseUiTest {
 
     @Nested
     @Story("Positive advertising scenarios")
-    @Tag("positive")
+    @Tag(TestMetadata.POSITIVE)
     class Positive {
         @Test
         @DisplayName("P01 — page has the Ads heading")
@@ -87,7 +89,7 @@ class AdsTests extends BaseUiTest {
 
     @Nested
     @Story("Negative advertising scenarios")
-    @Tag("negative")
+    @Tag(TestMetadata.NEGATIVE)
     class Negative {
         @Test
         @DisplayName("N01 — ad is not visible before its timer expires")

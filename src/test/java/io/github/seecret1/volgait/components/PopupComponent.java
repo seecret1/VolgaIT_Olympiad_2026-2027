@@ -1,6 +1,7 @@
 package io.github.seecret1.volgait.components;
 
 import io.github.seecret1.volgait.config.TestConfig;
+import io.github.seecret1.volgait.constants.DomAttributes;
 import io.qameta.allure.Step;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -12,7 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class PopupComponent {
+public final class PopupComponent {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebElement root;
@@ -64,14 +65,10 @@ public class PopupComponent {
     }
 
     public String role() {
-        return root.getAttribute("role");
+        return root.getAttribute(DomAttributes.ROLE);
     }
 
-    public WebElement container() {
-        return wait.until(ExpectedConditions.visibilityOf(root));
-    }
-
-    public void replaceValue(WebElement element, String value) {
+    void replaceValue(WebElement element, String value) {
         element = wait.until(ExpectedConditions.visibilityOf(element));
         ((JavascriptExecutor) driver).executeScript("""
                 const element = arguments[0];
@@ -83,10 +80,26 @@ public class PopupComponent {
                 element.dispatchEvent(new Event('input', { bubbles: true }));
                 element.dispatchEvent(new Event('change', { bubbles: true }));
                 """, element, value);
-        wait.until(ExpectedConditions.attributeToBe(element, "value", value));
+        wait.until(ExpectedConditions.attributeToBe(element, DomAttributes.VALUE, value));
     }
 
-    public String waitForNonBlankText(List<WebElement> elements) {
+    void click(WebElement element) {
+        wait.until(current -> {
+            if (ExpectedConditions.elementToBeClickable(element).apply(current) == null) {
+                return false;
+            }
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].scrollIntoView({block: 'center', behavior: 'instant'});", element);
+            try {
+                element.click();
+                return true;
+            } catch (org.openqa.selenium.ElementClickInterceptedException exception) {
+                return false;
+            }
+        });
+    }
+
+    String waitForNonBlankText(List<WebElement> elements) {
         return wait.until(current -> elements.stream()
                 .filter(WebElement::isDisplayed)
                 .map(WebElement::getText)
