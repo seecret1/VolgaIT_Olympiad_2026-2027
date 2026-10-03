@@ -1,0 +1,42 @@
+name: UI tests
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run tests
+        run: ./mvnw --batch-mode clean test -Dheadless=true -Dbrowser=chrome
+
+      - name: Build Allure report
+        if: always()
+        run: ./mvnw --batch-mode allure:report
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-artifacts
+          if-no-files-found: warn
+          path: |
+            target/allure-results
+            target/site/allure-maven-plugin
+            target/surefire-reports

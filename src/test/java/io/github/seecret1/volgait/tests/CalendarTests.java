@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
@@ -99,10 +99,10 @@ class CalendarTests extends BaseUiTest {
             assertEquals(initial, calendar.displayedMonthAndYear());
         }
 
-        @ParameterizedTest(name = "P{index} — valid date {0} can be entered")
-        @ValueSource(strings = {"2024-02-29", "2026-01-01", "2099-12-31"})
+        @ParameterizedTest(name = "{0} — valid date {1} can be entered")
+        @CsvSource({"P08, 2024-02-29", "P09, 2026-01-01", "P10, 2099-12-31"})
         @Severity(SeverityLevel.BLOCKER)
-        void valid_dates_can_be_entered(String date) {
+        void valid_dates_can_be_entered(String scenarioId, String date) {
             calendar.enterDate(date);
             assertEquals(LocalDate.parse(date), calendar.selectedLocalDate());
         }
@@ -112,10 +112,15 @@ class CalendarTests extends BaseUiTest {
     @Story("Negative calendar scenarios")
     @Tag("negative")
     class Negative {
-        @ParameterizedTest(name = "N{index} — invalid date {0} is not interpreted as ISO date")
-        @ValueSource(strings = {"31/12/2026", "2025-02-30", "not-a-date", "2026-13-01"})
+        @ParameterizedTest(name = "{0} — invalid date {1} is not interpreted as ISO date")
+        @CsvSource({
+                "N01, 31/12/2026",
+                "N02, 2025-02-30",
+                "N03, not-a-date",
+                "N04, 2026-13-01"
+        })
         @Severity(SeverityLevel.CRITICAL)
-        void invalid_dates_are_not_interpreted_as_iso_dates(String invalidDate) {
+        void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {
             calendar.enterDate(invalidDate);
             assertAll(
                     () -> assertEquals(invalidDate, calendar.selectedDate()),
@@ -124,4 +129,3 @@ class CalendarTests extends BaseUiTest {
         }
     }
 }
-

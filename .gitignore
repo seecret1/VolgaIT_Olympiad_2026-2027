@@ -4,5 +4,5 @@ target/
 *.iml
 allure-report/
 allure-results/
+.allure/
 work/
-
