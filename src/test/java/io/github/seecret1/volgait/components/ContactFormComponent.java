@@ -14,9 +14,9 @@ public final class ContactFormComponent {
 
     @Step("Fill contact form")
     public ContactFormComponent fill(ContactData data) {
-        replace(By.cssSelector("input.name"), data.name());
-        replace(By.cssSelector("input.email"), data.email());
-        replace(By.cssSelector("textarea.textarea"), data.message());
+        popup.replaceValue(By.cssSelector("input.name"), data.name());
+        popup.replaceValue(By.cssSelector("input.email"), data.email());
+        popup.replaceValue(By.cssSelector("textarea.textarea"), data.message());
         return this;
     }
 
@@ -48,23 +48,11 @@ public final class ContactFormComponent {
     }
 
     public String errorText(String field) {
-        return root().findElements(By.cssSelector("[id*='-%s-'][id$='-error']".formatted(field)))
-                .stream()
-                .filter(WebElement::isDisplayed)
-                .map(WebElement::getText)
-                .filter(text -> !text.isBlank())
-                .findFirst()
-                .orElse("");
-    }
-
-    private void replace(By locator, String value) {
-        WebElement element = root().findElement(locator);
-        element.clear();
-        element.sendKeys(value);
+        return popup.waitForNonBlankText(
+                By.cssSelector("[id*='-%s-'][id$='-error']".formatted(field)));
     }
 
     private WebElement root() {
         return popup.container();
     }
 }
-

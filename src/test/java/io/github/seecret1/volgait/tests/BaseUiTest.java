@@ -9,8 +9,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class BaseUiTest implements ConfigProvider {
     protected WebDriver driver;
@@ -35,8 +33,5 @@ public abstract class BaseUiTest implements ConfigProvider {
 
     protected void open(String url) {
         driver.get(url);
-        new WebDriverWait(driver, TestConfig.pageLoadTimeout()).until(current ->
-                "complete".equals(((JavascriptExecutor) current)
-                        .executeScript("return document.readyState")));
     }
 }

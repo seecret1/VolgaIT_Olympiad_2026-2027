@@ -2,6 +2,7 @@ package io.github.seecret1.volgait.components;
 
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -61,6 +62,32 @@ public class PopupComponent {
 
     public WebElement container() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(root));
+    }
+
+    public void replaceValue(By child, String value) {
+        WebElement element = nestedVisible(child);
+        ((JavascriptExecutor) driver).executeScript("""
+                const element = arguments[0];
+                const value = arguments[1];
+                const prototype = element instanceof HTMLTextAreaElement
+                        ? HTMLTextAreaElement.prototype
+                        : HTMLInputElement.prototype;
+                Object.getOwnPropertyDescriptor(prototype, 'value').set.call(element, value);
+                element.dispatchEvent(new Event('input', { bubbles: true }));
+                element.dispatchEvent(new Event('change', { bubbles: true }));
+                """, element, value);
+        wait.until(ExpectedConditions.attributeToBe(element, "value", value));
+    }
+
+    public String waitForNonBlankText(By child) {
+        return wait.until(current -> current.findElements(root).stream()
+                .filter(WebElement::isDisplayed)
+                .flatMap(container -> container.findElements(child).stream())
+                .filter(WebElement::isDisplayed)
+                .map(WebElement::getText)
+                .filter(text -> !text.isBlank())
+                .findFirst()
+                .orElse(null));
     }
 
     private WebElement nestedVisible(By child) {
