@@ -5,11 +5,6 @@ import com.typesafe.config.ConfigFactory;
 
 import java.util.List;
 
-/**
- * Centralized URLs, input data and expected values loaded from application.conf.
- * The shape intentionally follows the configuration approach used in the
- * previous VolgaIT semifinal solution.
- */
 public interface ConfigProvider {
     static Config readConfig() {
         return ConfigFactory.load("application.conf");

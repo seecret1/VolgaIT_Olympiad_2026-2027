@@ -13,16 +13,17 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
 public final class FormFieldsPage extends BasePage {
-    @FindBy(xpath = "//*[@id='message']")
+
+    @FindBy(id = "message")
     private WebElement message;
 
     @FindBy(xpath = "//label[normalize-space()='Automation tools']/following-sibling::ul[1]/li")
     private List<WebElement> automationTools;
 
-    @FindBy(xpath = "//*[@id='submit-btn']")
+    @FindBy(xpath = "//button[@id='submit-btn']")
     private WebElement submitButton;
 
-    @FindBy(xpath = "//*[@id='name-input']")
+    @FindBy(xpath = "//input[@id='name-input']")
     private WebElement nameInput;
 
     public FormFieldsPage(WebDriver driver) {

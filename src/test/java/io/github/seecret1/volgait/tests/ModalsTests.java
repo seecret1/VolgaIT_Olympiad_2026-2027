@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Modals")
 @DisplayName("Modals page")
 class ModalsTests extends BaseUiTest {
+
     private ModalsPage modals;
 
     @BeforeEach
@@ -36,6 +37,7 @@ class ModalsTests extends BaseUiTest {
     @Story("Positive modal scenarios")
     @Tag(TestMetadata.POSITIVE)
     class Positive {
+
         @Test
         @DisplayName("P01 — page has the Modals heading")
         void page_has_expected_heading() {
@@ -113,6 +115,7 @@ class ModalsTests extends BaseUiTest {
     @Story("Negative modal scenarios")
     @Tag(TestMetadata.NEGATIVE)
     class Negative {
+
         @Test
         @DisplayName("N01 — Escape does not close the simple modal by configuration")
         void escape_does_not_close_simple_modal() {

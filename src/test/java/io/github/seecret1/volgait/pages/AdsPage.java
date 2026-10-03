@@ -6,21 +6,22 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public final class AdsPage extends BasePage {
+
     private final PopupComponent ad;
 
-    @FindBy(xpath = "//*[@id='pum-1272']")
+    @FindBy(id = "pum-1272")
     private WebElement adRoot;
 
-    @FindBy(xpath = "//*[@id='pum-1272']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-title ')]")
+    @FindBy(css = "#pum-1272 .pum-title")
     private WebElement adTitle;
 
-    @FindBy(xpath = "//*[@id='pum-1272']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-content ')]")
+    @FindBy(css = "#pum-1272 .pum-content")
     private WebElement adContent;
 
-    @FindBy(xpath = "//*[@id='pum-1272']//button[contains(concat(' ', normalize-space(@class), ' '), ' pum-close ')]")
+    @FindBy(css = "#pum-1272 button.pum-close")
     private WebElement adCloseButton;
 
-    @FindBy(xpath = "//*[contains(concat(' ', normalize-space(@class), ' '), ' entry-content ')]/p[1]")
+    @FindBy(css = ".entry-content > p:first-of-type")
     private WebElement countdown;
 
     public AdsPage(WebDriver driver) {

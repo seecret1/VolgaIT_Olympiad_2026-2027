@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Calendar")
 @DisplayName("Calendar page")
 class CalendarTests extends BaseUiTest {
+
     private CalendarPage calendar;
 
     @BeforeEach
@@ -41,6 +42,7 @@ class CalendarTests extends BaseUiTest {
     @Story("Positive calendar scenarios")
     @Tag(TestMetadata.POSITIVE)
     class Positive {
+
         @Test
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("P01 — page has the Calendar heading")
@@ -124,6 +126,7 @@ class CalendarTests extends BaseUiTest {
     @Story("Negative calendar scenarios")
     @Tag(TestMetadata.NEGATIVE)
     class Negative {
+
         @ParameterizedTest(name = "{0} — invalid date {1} is not interpreted as ISO date")
         @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
@@ -134,7 +137,6 @@ class CalendarTests extends BaseUiTest {
                     () -> assertThrows(DateTimeException.class, calendar::selectedLocalDate)
             );
         }
-
 
         static Stream<Arguments> invalidDates() {
             return IntStream.range(0, CALENDAR_INVALID_DATES.size())

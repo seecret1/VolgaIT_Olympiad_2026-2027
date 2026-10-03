@@ -13,18 +13,19 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public final class CalendarPage extends BasePage {
+
     private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    @FindBy(xpath = "//input[contains(concat(' ', normalize-space(@class), ' '), ' jp-contact-form-date ')]")
+    @FindBy(id = "g1065-1-selectorenteradate")
     private WebElement dateInput;
 
     @FindBy(className = "contact-form__field-format")
     private WebElement formatHint;
 
-    @FindBy(xpath = "//*[contains(concat(' ', normalize-space(@class), ' '), ' dp-below ') or contains(concat(' ', normalize-space(@class), ' '), ' dp-above ')]")
+    @FindBy(css = ".dp-below, .dp-above")
     private WebElement datePicker;
 
-    @FindBy(xpath = "//button[contains(concat(' ', normalize-space(@class), ' '), ' dp-day ') and not(contains(concat(' ', normalize-space(@class), ' '), ' dp-edge-day ')) and not(contains(concat(' ', normalize-space(@class), ' '), ' dp-day-disabled '))]")
+    @FindBy(css = ".dp-day:not(.dp-edge-day):not(.dp-day-disabled)")
     private List<WebElement> availableDays;
 
     @FindBy(className = "dp-next")

@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Feature("Advertising popup")
 @DisplayName("Ads page")
 class AdsTests extends BaseUiTest {
+
     private AdsPage ads;
 
     @BeforeEach
@@ -34,6 +35,7 @@ class AdsTests extends BaseUiTest {
     @Story("Positive advertising scenarios")
     @Tag(TestMetadata.POSITIVE)
     class Positive {
+
         @Test
         @DisplayName("P01 — page has the Ads heading")
         void page_has_expected_heading() {

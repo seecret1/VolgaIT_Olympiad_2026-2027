@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Feature("Mandatory Automation Tools scenario")
 @DisplayName("Form Fields page")
 class FormFieldsTests extends BaseUiTest {
+
     @Test
     @Severity(SeverityLevel.BLOCKER)
     @DisplayName("Selenium reads Automation Tools and writes them to Message separated by commas")
@@ -34,6 +35,5 @@ class FormFieldsTests extends BaseUiTest {
                 () -> assertEquals(String.join(AUTOMATION_TOOLS_SEPARATOR, expectedTools), message),
                 () -> assertEquals(message, form.messageValue())
         );
-
     }
 }

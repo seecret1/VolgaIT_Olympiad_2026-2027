@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.openqa.selenium.WebDriver;
 
 public abstract class BaseUiTest implements ConfigProvider {
+
     protected WebDriver driver;
 
     @RegisterExtension
