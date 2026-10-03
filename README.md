@@ -94,6 +94,25 @@ JUnit 5 запускает классы и методы параллельно �
 
 В отчёте есть Epic/Feature/Story, severity, позитивные/негативные теги, понятные названия сценариев и шаги Page/Component Objects. При любой ошибке автоматически прикладываются screenshot, page source и текст исключения.
 
+## Docker
+
+Образ включает Java 17, Maven, Chrome и ChromeDriver. Зависимости Maven кэшируются на отдельном слое сборки, а контейнер по умолчанию запускает полный набор тестов в headless Chrome.
+
+```bash
+docker build -t volgait-ui-tests .
+docker run --rm --shm-size=2g -v "${PWD}/target:/workspace/target" volgait-ui-tests
+```
+
+Для запуска конкретного набора или передачи дополнительных параметров замените команду контейнера:
+
+```bash
+docker run --rm --shm-size=2g volgait-ui-tests \
+  mvn --batch-mode test -Dgroups=positive \
+  -Djunit.jupiter.execution.parallel.config.fixed.parallelism=6
+```
+
+После запуска Allure results и Surefire reports доступны в локальном каталоге `target`, если он подключён как volume.
+
 ## Тестовые сценарии
 
 ### Calendars — позитивные
