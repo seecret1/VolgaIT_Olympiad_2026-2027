@@ -13,55 +13,55 @@ public final class ModalsPage extends BasePage {
     private final PopupComponent simpleModal;
     private final PopupComponent formModal;
 
-    @FindBy(id = "simpleModal")
+    @FindBy(xpath = "//*[@id='simpleModal']")
     private WebElement simpleModalButton;
 
-    @FindBy(id = "formModal")
+    @FindBy(xpath = "//*[@id='formModal']")
     private WebElement formModalButton;
 
-    @FindBy(id = "pum-1318")
+    @FindBy(xpath = "//*[@id='pum-1318']")
     private WebElement simpleModalRoot;
 
-    @FindBy(css = "#pum-1318 .pum-title")
+    @FindBy(xpath = "//*[@id='pum-1318']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-title ')]")
     private WebElement simpleModalTitle;
 
-    @FindBy(css = "#pum-1318 .pum-content")
+    @FindBy(xpath = "//*[@id='pum-1318']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-content ')]")
     private WebElement simpleModalContent;
 
-    @FindBy(css = "#pum-1318 button.pum-close")
+    @FindBy(xpath = "//*[@id='pum-1318']//button[contains(concat(' ', normalize-space(@class), ' '), ' pum-close ')]")
     private WebElement simpleModalCloseButton;
 
-    @FindBy(id = "pum-674")
+    @FindBy(xpath = "//*[@id='pum-674']")
     private WebElement formModalRoot;
 
-    @FindBy(css = "#pum-674 .pum-title")
+    @FindBy(xpath = "//*[@id='pum-674']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-title ')]")
     private WebElement formModalTitle;
 
-    @FindBy(css = "#pum-674 .pum-content")
+    @FindBy(xpath = "//*[@id='pum-674']//*[contains(concat(' ', normalize-space(@class), ' '), ' pum-content ')]")
     private WebElement formModalContent;
 
-    @FindBy(css = "#pum-674 button.pum-close")
+    @FindBy(xpath = "//*[@id='pum-674']//button[contains(concat(' ', normalize-space(@class), ' '), ' pum-close ')]")
     private WebElement formModalCloseButton;
 
-    @FindBy(css = "#pum-674 input.name")
+    @FindBy(xpath = "//*[@id='pum-674']//input[contains(concat(' ', normalize-space(@class), ' '), ' name ')]")
     private WebElement formName;
 
-    @FindBy(css = "#pum-674 input.email")
+    @FindBy(xpath = "//*[@id='pum-674']//input[contains(concat(' ', normalize-space(@class), ' '), ' email ')]")
     private WebElement formEmail;
 
-    @FindBy(css = "#pum-674 textarea.textarea")
+    @FindBy(xpath = "//*[@id='pum-674']//textarea[contains(concat(' ', normalize-space(@class), ' '), ' textarea ')]")
     private WebElement formMessage;
 
-    @FindBy(css = "#pum-674 button[type='submit']")
+    @FindBy(xpath = "//*[@id='pum-674']//button[@type='submit']")
     private WebElement formSubmitButton;
 
-    @FindBy(css = "#pum-674 [id*='-name-'][id$='-error']")
+    @FindBy(xpath = "//*[@id='pum-674']//*[contains(@id, '-name-') and substring(@id, string-length(@id) - 5) = '-error']")
     private List<WebElement> nameErrors;
 
-    @FindBy(css = "#pum-674 [id*='-email-'][id$='-error']")
+    @FindBy(xpath = "//*[@id='pum-674']//*[contains(@id, '-email-') and substring(@id, string-length(@id) - 5) = '-error']")
     private List<WebElement> emailErrors;
 
-    @FindBy(css = "#pum-674 [id*='-message-'][id$='-error']")
+    @FindBy(xpath = "//*[@id='pum-674']//*[contains(@id, '-message-') and substring(@id, string-length(@id) - 5) = '-error']")
     private List<WebElement> messageErrors;
 
     public ModalsPage(WebDriver driver) {

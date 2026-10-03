@@ -1,5 +1,8 @@
 package io.github.seecret1.volgait.pages;
 
+import io.github.seecret1.volgait.constants.DomAttributes;
+import io.github.seecret1.volgait.config.ConfigProvider;
+
 import io.qameta.allure.Step;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
@@ -10,16 +13,16 @@ import org.openqa.selenium.support.FindBy;
 import java.util.List;
 
 public final class FormFieldsPage extends BasePage {
-    @FindBy(id = "message")
+    @FindBy(xpath = "//*[@id='message']")
     private WebElement message;
 
     @FindBy(xpath = "//label[normalize-space()='Automation tools']/following-sibling::ul[1]/li")
     private List<WebElement> automationTools;
 
-    @FindBy(id = "submit-btn")
+    @FindBy(xpath = "//*[@id='submit-btn']")
     private WebElement submitButton;
 
-    @FindBy(id = "name-input")
+    @FindBy(xpath = "//*[@id='name-input']")
     private WebElement nameInput;
 
     public FormFieldsPage(WebDriver driver) {
@@ -33,7 +36,7 @@ public final class FormFieldsPage extends BasePage {
 
     @Step("Fill Message with comma-separated Automation Tools")
     public String fillMessageWithAutomationTools() {
-        String message = String.join(", ", automationTools());
+        String message = String.join(ConfigProvider.AUTOMATION_TOOLS_SEPARATOR, automationTools());
         replace(this.message, message);
         return message;
     }
@@ -52,6 +55,6 @@ public final class FormFieldsPage extends BasePage {
     }
 
     public String messageValue() {
-        return visible(message).getAttribute("value");
+        return visible(message).getAttribute(DomAttributes.VALUE);
     }
 }

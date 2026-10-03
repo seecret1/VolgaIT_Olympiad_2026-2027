@@ -1,5 +1,7 @@
 package io.github.seecret1.volgait.pages;
 
+import io.github.seecret1.volgait.constants.DomAttributes;
+
 import io.qameta.allure.Step;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -13,32 +15,29 @@ import java.util.List;
 public final class CalendarPage extends BasePage {
     private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    @FindBy(css = "input.jp-contact-form-date")
+    @FindBy(xpath = "//input[contains(concat(' ', normalize-space(@class), ' '), ' jp-contact-form-date ')]")
     private WebElement dateInput;
 
-    @FindBy(css = ".contact-form__field-format")
+    @FindBy(className = "contact-form__field-format")
     private WebElement formatHint;
 
-    @FindBy(css = ".dp-below, .dp-above")
+    @FindBy(xpath = "//*[contains(concat(' ', normalize-space(@class), ' '), ' dp-below ') or contains(concat(' ', normalize-space(@class), ' '), ' dp-above ')]")
     private WebElement datePicker;
 
-    @FindBy(css = ".dp-day:not(.dp-edge-day):not(.dp-day-disabled)")
+    @FindBy(xpath = "//button[contains(concat(' ', normalize-space(@class), ' '), ' dp-day ') and not(contains(concat(' ', normalize-space(@class), ' '), ' dp-edge-day ')) and not(contains(concat(' ', normalize-space(@class), ' '), ' dp-day-disabled '))]")
     private List<WebElement> availableDays;
 
-    @FindBy(css = ".dp-next")
+    @FindBy(className = "dp-next")
     private WebElement nextMonth;
 
-    @FindBy(css = ".dp-prev")
+    @FindBy(className = "dp-prev")
     private WebElement previousMonth;
 
-    @FindBy(css = ".dp-cal-month")
+    @FindBy(className = "dp-cal-month")
     private WebElement displayedMonth;
 
-    @FindBy(css = ".dp-cal-year")
+    @FindBy(className = "dp-cal-year")
     private WebElement displayedYear;
-
-    @FindBy(css = ".jp-contact-form-date-wrap .contact-form__input-error")
-    private List<WebElement> validationErrors;
 
     public CalendarPage(WebDriver driver) {
         super(driver);
@@ -90,7 +89,7 @@ public final class CalendarPage extends BasePage {
     }
 
     public String selectedDate() {
-        return visible(dateInput).getAttribute("value");
+        return visible(dateInput).getAttribute(DomAttributes.VALUE);
     }
 
     public String formatHint() {
@@ -106,11 +105,6 @@ public final class CalendarPage extends BasePage {
     public List<Integer> availableDays() {
         return all(availableDays)
                 .stream().map(WebElement::getText).map(Integer::parseInt).toList();
-    }
-
-    public boolean hasValidationError() {
-        return validationErrors.stream()
-                .anyMatch(element -> element.isDisplayed() && !element.getText().isBlank());
     }
 
     public LocalDate selectedLocalDate() {

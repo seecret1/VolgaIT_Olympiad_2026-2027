@@ -2,7 +2,6 @@ package io.github.seecret1.volgait.pages;
 
 import io.github.seecret1.volgait.config.TestConfig;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,7 +15,7 @@ public abstract class BasePage {
     protected final WebDriver driver;
     protected final WebDriverWait wait;
 
-    @FindBy(css = "h1[itemprop='headline']")
+    @FindBy(xpath = "//h1[@itemprop='headline']")
     private WebElement heading;
 
     protected BasePage(WebDriver driver) {
@@ -39,7 +38,8 @@ public abstract class BasePage {
 
     protected void replace(WebElement element, String value) {
         element = visible(element);
-        element.sendKeys(Keys.chord(Keys.CONTROL, "a"), value);
+        element.clear();
+        element.sendKeys(value);
     }
 
     protected String pageHeading() {
