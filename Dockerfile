@@ -1,6 +1,10 @@
+ARG BROWSER=chrome
+
 FROM maven:3.9.16-eclipse-temurin-17-noble AS maven-runtime
 
-FROM selenium/standalone-chrome:4.49.0-20260909
+FROM selenium/standalone-${BROWSER}:4.49.0-20260909
+
+ARG BROWSER
 
 USER root
 
@@ -9,6 +13,7 @@ COPY --from=maven-runtime /usr/share/maven /usr/share/maven
 
 ENV JAVA_HOME=/opt/java/openjdk17
 ENV MAVEN_HOME=/usr/share/maven
+ENV TEST_BROWSER=${BROWSER}
 ENV PATH="${JAVA_HOME}/bin:${MAVEN_HOME}/bin:${PATH}"
 
 RUN ln -s /usr/share/maven/bin/mvn /usr/local/bin/mvn
@@ -24,4 +29,4 @@ RUN mvn --batch-mode --no-transfer-progress -DskipTests dependency:go-offline
 COPY --chown=seluser:seluser src ./src
 
 ENTRYPOINT []
-CMD ["mvn", "--batch-mode", "--no-transfer-progress", "clean", "test", "-Dheadless=true", "-Dbrowser=chrome"]
+CMD ["sh", "-c", "mvn --batch-mode --no-transfer-progress clean test -Dheadless=true -Dbrowser=$TEST_BROWSER"]

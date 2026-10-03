@@ -11,6 +11,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
 
     steps:
       - name: Checkout
@@ -24,7 +28,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: ./mvnw --batch-mode clean test -Dheadless=true -Dbrowser=chrome
+        run: ./mvnw --batch-mode clean test -Dheadless=true -Dbrowser=${{ matrix.browser }}
 
       - name: Build Allure report
         if: always()
@@ -34,7 +38,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ui-test-artifacts
+          name: ui-test-artifacts-${{ matrix.browser }}
           if-no-files-found: warn
           path: |
             target/allure-results

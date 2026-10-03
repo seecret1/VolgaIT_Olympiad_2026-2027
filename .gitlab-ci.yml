@@ -13,16 +13,16 @@ cache:
   paths:
     - .m2/repository
 
-.with-chromium:
+ui-tests:
+  stage: test
+  parallel:
+    matrix:
+      - BROWSER: [chrome, firefox]
   before_script:
     - apt-get update
-    - apt-get install --yes --no-install-recommends chromium || apt-get install --yes --no-install-recommends chromium-browser
-
-ui-tests:
-  extends: .with-chromium
-  stage: test
+    - if [ "$BROWSER" = "firefox" ]; then apt-get install --yes --no-install-recommends firefox-esr; else apt-get install --yes --no-install-recommends chromium || apt-get install --yes --no-install-recommends chromium-browser; fi
   script:
-    - mvn $MAVEN_CLI_OPTS clean test -Dheadless=true -Dbrowser=chrome
+    - mvn $MAVEN_CLI_OPTS clean test -Dheadless=true -Dbrowser=$BROWSER
   artifacts:
     when: always
     expire_in: 14 days

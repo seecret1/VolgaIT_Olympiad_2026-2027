@@ -2,7 +2,7 @@ pipeline {
     agent {
         dockerfile {
             filename 'Dockerfile'
-            additionalBuildArgs '--pull'
+            additionalBuildArgs "--pull --build-arg BROWSER=${params.BROWSER}"
             args '--shm-size=2g'
         }
     }
@@ -11,6 +11,11 @@ pipeline {
         timestamps()
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds(abortPrevious: true)
+    }
+
+    parameters {
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox'],
+                description: 'Browser used by the Selenium test suite')
     }
 
     stages {
@@ -22,7 +27,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh './mvnw --batch-mode --no-transfer-progress clean test -Dheadless=true -Dbrowser=chrome'
+                sh "./mvnw --batch-mode --no-transfer-progress clean test -Dheadless=true -Dbrowser=${params.BROWSER}"
             }
         }
 

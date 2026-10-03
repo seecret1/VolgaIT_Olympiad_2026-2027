@@ -9,7 +9,7 @@
 - [Ads](https://practice-automation.com/ads/) — 8 позитивных и 3 негативных сценария;
 - [Form Fields](https://practice-automation.com/form-fields/) — отдельный обязательный сценарий переноса списка Automation Tools в Message средствами Selenium.
 
-Всего: **39 автотестов**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
+Всего: **39 UI-автотестов** и **7 проверок фабрики браузеров**. Каждый параметр параметризованного теста отображается в JUnit и Allure как отдельный запуск.
 
 ## Стек
 
@@ -26,12 +26,14 @@
 
 - **Page Object** — `CalendarPage`, `ModalsPage`, `AdsPage`, `FormFieldsPage` скрывают локаторы и действия страниц; элементы объявлены через Selenium `@FindBy` и инициализируются `PageFactory`;
 - **Component Object** — `PopupComponent` и `ContactFormComponent` моделируют переиспользуемые части интерфейса;
-- **Factory** — `DriverFactory` централизованно создаёт Chrome/Firefox с едиными настройками;
+- **Factory** — `DriverFactory` централизованно создаёт Chrome, Firefox, Edge и Safari с едиными настройками;
 - **Builder** — `ContactData.Builder` создаёт читаемые тестовые данные формы;
 - **JUnit Extension** — `ScreenshotExtension` прикладывает скриншот, HTML страницы и причину к Allure до закрытия браузера.
 - **External Configuration** — URL, параметры запуска, вводимые данные и ожидаемые значения хранятся в `application.conf` и читаются через `ConfigProvider`.
 
 Не используются неявные ожидания и `Thread.sleep`. Все синхронизации основаны на явных ожиданиях и наблюдаемом состоянии DOM.
+
+Локаторы объявлены через `@FindBy(className = ...)` и `@FindBy(xpath = ...)`. XPath проверяет полные имена CSS-классов и ограничивает поиск нужным модальным окном. Общие строки разделены на `DomAttributes`, `RuntimeKeys` и `TestMetadata`; поля контактной формы представлены enum `ContactField`. URL и тестовые данные остаются в `application.conf`.
 
 ```text
 src/test/java/io/github/seecret1/volgait
@@ -46,7 +48,7 @@ src/test/java/io/github/seecret1/volgait
 
 ## Быстрый запуск
 
-Нужны Java 17+ и установленный актуальный Chrome или Firefox. Драйвер вручную скачивать не требуется — его подберёт Selenium Manager.
+Нужны Java 17+ и установленный выбранный браузер. Драйвер вручную скачивать не требуется — его подберёт Selenium Manager.
 
 Windows:
 
@@ -95,7 +97,7 @@ foreach ($browser in 'chrome', 'firefox', 'edge') {
 Safari запускается на macOS с включённым Remote Automation (`safaridriver --enable`), с `-Dbrowser=safari -Dheadless=false`.
 Для удалённых браузеров добавьте `-DremoteUrl=http://localhost:4444`; браузер должен быть доступен на соответствующем узле Grid.
 Параметр `browserBinary` позволяет использовать совместимый Chromium-браузер через режим `chrome`, но совместимость его версии с ChromeDriver нужно проверять отдельно.
-Docker-образ включает только Chrome; для других браузеров используйте установленный браузер на хосте либо Grid.
+Dockerfile собирает образ с Chrome или Firefox; Edge и Safari доступны на хосте либо через Grid.
 
 ## Отчёт
 
@@ -115,11 +117,18 @@ Docker-образ включает только Chrome; для других бр
 
 ## Docker
 
-Образ включает Java 17, Maven, Chrome и ChromeDriver. Зависимости Maven кэшируются на отдельном слое сборки, а контейнер по умолчанию запускает полный набор тестов в headless Chrome.
+Образ включает Java 17, Maven и выбранный браузер с драйвером. Зависимости Maven кэшируются на отдельном слое сборки, а контейнер по умолчанию запускает полный набор тестов в headless Chrome.
 
 ```bash
 docker build -t volgait-ui-tests .
 docker run --rm --shm-size=2g -v "${PWD}/target:/workspace/target" volgait-ui-tests
+```
+
+Для Firefox образ собирается тем же Dockerfile:
+
+```bash
+docker build --build-arg BROWSER=firefox -t volgait-ui-tests:firefox .
+docker run --rm --shm-size=2g volgait-ui-tests:firefox
 ```
 
 Для запуска конкретного набора или передачи дополнительных параметров замените команду контейнера:
@@ -212,7 +221,7 @@ docker run --rm --shm-size=2g volgait-ui-tests \
 
 ## CI/CD
 
-GitHub Actions запускает полный набор в headless Chrome для каждого push и pull request. Даже при падении workflow сохраняет `allure-results`, статический Allure report и Surefire-отчёты как артефакты.
+GitHub Actions и GitLab CI запускают полный набор в headless Chrome и Firefox для каждого push и pull request. Jenkins позволяет выбрать Chrome или Firefox параметром `BROWSER`. Даже при падении CI сохраняет `allure-results`, статический Allure report и Surefire-отчёты как артефакты.
 
 Также в репозитории есть:
 
