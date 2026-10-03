@@ -68,7 +68,9 @@ Linux/macOS:
 .\mvnw.cmd clean test "-Dbrowser=firefox"
 .\mvnw.cmd clean test "-Dheadless=false"
 .\mvnw.cmd clean test "-Dtimeout=20"
-.\mvnw.cmd clean test "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=6"
+.\mvnw.cmd clean test `
+  "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=6" `
+  "-Djunit.jupiter.execution.parallel.config.fixed.max-pool-size=6"
 ```
 
 | Параметр | По умолчанию | Назначение |
@@ -80,7 +82,7 @@ Linux/macOS:
 | `timeout` | `15` | ожидание элементов, секунды |
 | `pageLoadTimeout` | `40` | ожидание загрузки страницы, секунды |
 
-JUnit 5 запускает тестовые классы параллельно в фиксированном пуле из 2 потоков, а сценарии внутри одного класса — последовательно. Такой режим ускоряет набор, не перегружая внешний тестовый стенд и локальный Chrome. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`.
+JUnit 5 запускает тестовые классы и отдельные сценарии параллельно в фиксированном пуле из 4 потоков. Каждый сценарий получает собственный экземпляр WebDriver, поэтому браузерные сессии изолированы друг от друга. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`; при увеличении также задайте такое же значение для `junit.jupiter.execution.parallel.config.fixed.max-pool-size`.
 
 ## Allure
 
@@ -136,7 +138,8 @@ docker run --rm --shm-size=2g volgait-ui-tests:firefox
 ```bash
 docker run --rm --shm-size=2g volgait-ui-tests \
   mvn --batch-mode test -Dgroups=positive \
-  -Djunit.jupiter.execution.parallel.config.fixed.parallelism=6
+  -Djunit.jupiter.execution.parallel.config.fixed.parallelism=6 \
+  -Djunit.jupiter.execution.parallel.config.fixed.max-pool-size=6
 ```
 
 После запуска Allure results и Surefire reports доступны в локальном каталоге `target`, если он подключён как volume.
