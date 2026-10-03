@@ -66,6 +66,7 @@ Linux/macOS:
 .\mvnw.cmd clean test "-Dbrowser=firefox"
 .\mvnw.cmd clean test "-Dheadless=false"
 .\mvnw.cmd clean test "-Dtimeout=20"
+.\mvnw.cmd clean test "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=6"
 ```
 
 | Параметр | По умолчанию | Назначение |
@@ -74,6 +75,8 @@ Linux/macOS:
 | `headless` | `true` | запуск без окна браузера |
 | `timeout` | `15` | ожидание элементов, секунды |
 | `pageLoadTimeout` | `40` | ожидание загрузки страницы, секунды |
+
+JUnit 5 запускает классы и методы параллельно в фиксированном пуле из 4 потоков. Размер пула можно переопределить системным параметром `junit.jupiter.execution.parallel.config.fixed.parallelism`.
 
 ## Allure
 
