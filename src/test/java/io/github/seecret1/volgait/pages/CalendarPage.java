@@ -48,38 +48,38 @@ public final class CalendarPage extends BasePage {
         return pageHeading();
     }
 
-    @Step("Open calendar widget")
+    @Step("Открыть календарь")
     public CalendarPage openCalendar() {
         clickable(dateInput).click();
         visible(datePicker);
         return this;
     }
 
-    @Step("Enter date: {date}")
+    @Step("Ввести дату: {date}")
     public CalendarPage enterDate(String date) {
         replace(dateInput, date);
         visible(dateInput).sendKeys(Keys.TAB);
         return this;
     }
 
-    @Step("Select day {day} in the current calendar month")
+    @Step("Выбрать день {day} в текущем месяце")
     public CalendarPage selectDay(int day) {
         openCalendar();
         WebElement dayButton = all(availableDays).stream()
                 .filter(element -> String.valueOf(day).equals(element.getText().trim()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Day is unavailable: " + day));
+                .orElseThrow(() -> new IllegalArgumentException("День недоступен для выбора: " + day));
         clickable(dayButton).click();
         return this;
     }
 
-    @Step("Go to next calendar month")
+    @Step("Перейти к следующему месяцу")
     public CalendarPage nextMonth() {
         clickable(nextMonth).click();
         return this;
     }
 
-    @Step("Go to previous calendar month")
+    @Step("Перейти к предыдущему месяцу")
     public CalendarPage previousMonth() {
         clickable(previousMonth).click();
         return this;

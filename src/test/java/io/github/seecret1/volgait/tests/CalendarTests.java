@@ -26,8 +26,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Epic(TestMetadata.EPIC)
-@Feature("Calendar")
-@DisplayName("Calendar page")
+@Feature("Календарь")
+@DisplayName("Страница «Календарь»")
 class CalendarTests extends BaseUiTest {
 
     private CalendarPage calendar;
@@ -39,27 +39,27 @@ class CalendarTests extends BaseUiTest {
     }
 
     @Nested
-    @Story("Positive calendar scenarios")
+    @Story("Позитивные сценарии календаря")
     @Tag(TestMetadata.POSITIVE)
     class Positive {
 
         @Test
         @Severity(SeverityLevel.NORMAL)
-        @DisplayName("P01 — page has the Calendar heading")
+        @DisplayName("P01 — на странице отображается заголовок «Calendars»")
         void page_has_expected_heading() {
             assertEquals(CALENDAR_HEADING, calendar.heading());
         }
 
         @Test
         @Severity(SeverityLevel.NORMAL)
-        @DisplayName("P02 — field displays the ISO date format hint")
+        @DisplayName("P02 — поле отображает подсказку формата даты ISO")
         void field_has_iso_format_hint() {
             assertEquals(CALENDAR_FORMAT_HINT, calendar.formatHint());
         }
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P03 — click on the field opens the date picker")
+        @DisplayName("P03 — нажатие на поле открывает календарь")
         void click_opens_date_picker() {
             calendar.openCalendar();
             assertTrue(calendar.widgetIsVisible());
@@ -67,7 +67,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P04 — current month contains a complete set of days")
+        @DisplayName("P04 — текущий месяц содержит полный набор дней")
         void current_month_contains_valid_days() {
             calendar.openCalendar();
             List<Integer> days = calendar.availableDays();
@@ -81,7 +81,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.BLOCKER)
-        @DisplayName("P05 — selecting day 1 fills the input")
+        @DisplayName("P05 — выбор первого дня заполняет поле даты")
         void selecting_day_fills_input() {
             calendar.selectDay(CALENDAR_FIRST_DAY);
             assertEquals(CALENDAR_FIRST_DAY, calendar.selectedLocalDate().getDayOfMonth());
@@ -89,7 +89,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P06 — next arrow changes the displayed month")
+        @DisplayName("P06 — кнопка перехода вперёд изменяет отображаемый месяц")
         void next_arrow_changes_month() {
             calendar.openCalendar();
             String initial = calendar.displayedMonthAndYear();
@@ -99,7 +99,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P07 — previous arrow returns to the initial month")
+        @DisplayName("P07 — кнопка перехода назад возвращает исходный месяц")
         void previous_arrow_returns_to_initial_month() {
             calendar.openCalendar();
             String initial = calendar.displayedMonthAndYear();
@@ -107,7 +107,7 @@ class CalendarTests extends BaseUiTest {
             assertEquals(initial, calendar.displayedMonthAndYear());
         }
 
-        @ParameterizedTest(name = "{0} — valid date {1} can be entered")
+        @ParameterizedTest(name = "{0} — валидную дату {1} можно ввести")
         @MethodSource("validDates")
         @Severity(SeverityLevel.BLOCKER)
         void valid_dates_can_be_entered(String scenarioId, String date) {
@@ -123,11 +123,11 @@ class CalendarTests extends BaseUiTest {
     }
 
     @Nested
-    @Story("Negative calendar scenarios")
+    @Story("Негативные сценарии календаря")
     @Tag(TestMetadata.NEGATIVE)
     class Negative {
 
-        @ParameterizedTest(name = "{0} — invalid date {1} is not interpreted as ISO date")
+        @ParameterizedTest(name = "{0} — невалидная дата {1} не распознаётся как дата ISO")
         @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
         void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {

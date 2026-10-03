@@ -32,7 +32,7 @@ public final class ContactFormComponent {
         this.messageErrors = messageErrors;
     }
 
-    @Step("Fill contact form")
+    @Step("Заполнить контактную форму")
     public ContactFormComponent fill(ContactData data) {
         popup.replaceValue(name, data.name());
         popup.replaceValue(email, data.email());
@@ -40,7 +40,7 @@ public final class ContactFormComponent {
         return this;
     }
 
-    @Step("Submit contact form")
+    @Step("Отправить контактную форму")
     public void submit() {
         popup.click(submitButton);
     }

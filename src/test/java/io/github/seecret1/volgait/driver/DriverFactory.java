@@ -70,7 +70,7 @@ public final class DriverFactory {
         try {
             return new RemoteWebDriver(URI.create(TestConfig.remoteUrl()).toURL(), options);
         } catch (MalformedURLException exception) {
-            throw new IllegalArgumentException("remoteUrl must be a valid Selenium Grid URL", exception);
+            throw new IllegalArgumentException("remoteUrl должен содержать корректный URL Selenium Grid", exception);
         }
     }
 
@@ -116,14 +116,16 @@ public final class DriverFactory {
 
     private static SafariOptions safariOptions() {
         if (TestConfig.headless()) {
-            throw new IllegalArgumentException("Safari does not support headless mode. Set -Dheadless=false.");
+            throw new IllegalArgumentException(
+                    "Safari не поддерживает режим без интерфейса. Укажите -Dheadless=false.");
         }
         if (!TestConfig.browserBinary().isEmpty()) {
-            throw new IllegalArgumentException("Safari does not support browserBinary.");
+            throw new IllegalArgumentException("Safari не поддерживает параметр browserBinary.");
         }
         if (TestConfig.remoteUrl().isEmpty()
                 && !System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("mac")) {
-            throw new IllegalArgumentException("Local Safari requires macOS. Use remoteUrl for a Mac Grid node.");
+            throw new IllegalArgumentException(
+                    "Для локального Safari требуется macOS. Используйте remoteUrl узла Grid на macOS.");
         }
         return new SafariOptions();
     }

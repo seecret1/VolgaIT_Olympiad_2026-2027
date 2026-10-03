@@ -13,7 +13,8 @@ public enum BrowserType {
             return valueOf(value.trim().toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException exception) {
             throw new IllegalArgumentException(
-                    "Unsupported browser '%s'. Use chrome, firefox, edge or safari.".formatted(value), exception);
+                    "Браузер '%s' не поддерживается. Используйте chrome, firefox, edge или safari."
+                            .formatted(value), exception);
         }
     }
 }

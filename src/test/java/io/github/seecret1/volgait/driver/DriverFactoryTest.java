@@ -3,6 +3,7 @@ package io.github.seecret1.volgait.driver;
 import io.github.seecret1.volgait.constants.RuntimeKeys;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Isolated("Temporarily overrides browser system properties")
+@Isolated("Временно изменяет системные параметры браузера")
+@DisplayName("Фабрика браузеров")
 class DriverFactoryTest {
     private final Map<String, String> previous = new HashMap<>();
 
@@ -40,19 +42,22 @@ class DriverFactoryTest {
         });
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{index} — браузер {0} получает W3C-имя {1}")
+    @DisplayName("Передаёт правильное W3C-имя выбранного браузера")
     @CsvSource({"chrome,chrome", "firefox,firefox", "edge,MicrosoftEdge", "safari,safari"})
     void suppliesCorrectW3cBrowserName(String input, String expected) {
         assertEquals(expected, DriverFactory.optionsFor(BrowserType.from(input)).getBrowserName());
     }
 
     @Test
+    @DisplayName("Распознаёт имя браузера независимо от регистра и пробелов")
     void parsesMixedCaseAndWhitespace() {
         assertEquals(BrowserType.FIREFOX, BrowserType.from(" FireFox "));
         assertThrows(IllegalArgumentException.class, () -> BrowserType.from("unknown"));
     }
 
     @Test
+    @DisplayName("Отклоняет запуск Safari без интерфейса")
     void rejectsSafariHeadlessBeforeStartingSession() {
         System.setProperty(RuntimeKeys.HEADLESS, "true");
         assertTrue(assertThrows(IllegalArgumentException.class,
@@ -60,6 +65,7 @@ class DriverFactoryTest {
     }
 
     @Test
+    @DisplayName("Отклоняет пользовательский бинарный файл Safari")
     void rejectsCustomSafariBinary() {
         System.setProperty(RuntimeKeys.BROWSER_BINARY, "/custom/browser");
         assertTrue(assertThrows(IllegalArgumentException.class,

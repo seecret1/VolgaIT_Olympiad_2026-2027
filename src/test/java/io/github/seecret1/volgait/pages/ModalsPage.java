@@ -78,13 +78,13 @@ public final class ModalsPage extends BasePage {
         return pageHeading();
     }
 
-    @Step("Open simple modal")
+    @Step("Открыть простое модальное окно")
     public PopupComponent openSimpleModal() {
         clickable(simpleModalButton).click();
         return simpleModal.waitUntilVisible();
     }
 
-    @Step("Open form modal")
+    @Step("Открыть модальное окно с формой")
     public PopupComponent openFormModal() {
         clickable(formModalButton).click();
         return formModal.waitUntilVisible();

@@ -30,25 +30,25 @@ public final class FormFieldsPage extends BasePage {
         super(driver);
     }
 
-    @Step("Read Automation Tools with Selenium")
+    @Step("Прочитать список Automation Tools с помощью Selenium")
     public List<String> automationTools() {
         return all(automationTools).stream().map(WebElement::getText).map(String::trim).toList();
     }
 
-    @Step("Fill Message with comma-separated Automation Tools")
+    @Step("Заполнить Message списком Automation Tools через запятую")
     public String fillMessageWithAutomationTools() {
         String message = String.join(ConfigProvider.AUTOMATION_TOOLS_SEPARATOR, automationTools());
         replace(this.message, message);
         return message;
     }
 
-    @Step("Fill required name")
+    @Step("Заполнить обязательное поле имени")
     public FormFieldsPage enterName(String name) {
         replace(nameInput, name);
         return this;
     }
 
-    @Step("Submit feedback form")
+    @Step("Отправить форму обратной связи")
     public Alert submit() {
         scrollIntoView(submitButton);
         clickable(submitButton).click();

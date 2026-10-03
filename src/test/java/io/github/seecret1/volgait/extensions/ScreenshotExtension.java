@@ -24,13 +24,13 @@ public final class ScreenshotExtension implements TestExecutionExceptionHandler 
         if (driver != null) {
             if (driver instanceof TakesScreenshot screenshotDriver) {
                 byte[] screenshot = screenshotDriver.getScreenshotAs(OutputType.BYTES);
-                Allure.addAttachment("Screenshot on failure", "image/png",
+                Allure.addAttachment("Скриншот при ошибке", "image/png",
                         new ByteArrayInputStream(screenshot), ".png");
             }
-            Allure.addAttachment("Page source", "text/html", driver.getPageSource(), ".html");
+            Allure.addAttachment("Исходный код страницы", "text/html", driver.getPageSource(), ".html");
         }
         Optional.ofNullable(cause.getMessage())
-                .ifPresent(message -> Allure.addAttachment("Failure", message));
+                .ifPresent(message -> Allure.addAttachment("Ошибка", message));
         throw cause;
     }
 }

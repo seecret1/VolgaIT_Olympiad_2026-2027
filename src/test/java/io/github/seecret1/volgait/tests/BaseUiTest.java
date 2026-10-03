@@ -1,6 +1,6 @@
 package io.github.seecret1.volgait.tests;
 
-import io.github.seecret1.volgait.constants.RuntimeKeys;
+import io.github.seecret1.volgait.constants.TestMetadata;
 
 import io.github.seecret1.volgait.config.TestConfig;
 import io.github.seecret1.volgait.config.ConfigProvider;
@@ -22,8 +22,8 @@ public abstract class BaseUiTest implements ConfigProvider {
     @BeforeEach
     void startBrowser() {
         driver = DriverFactory.create();
-        Allure.parameter(RuntimeKeys.BROWSER, TestConfig.browser());
-        Allure.parameter(RuntimeKeys.HEADLESS, TestConfig.headless());
+        Allure.parameter(TestMetadata.BROWSER_PARAMETER, TestConfig.browser());
+        Allure.parameter(TestMetadata.HEADLESS_PARAMETER, TestConfig.headless());
     }
 
     @AfterEach

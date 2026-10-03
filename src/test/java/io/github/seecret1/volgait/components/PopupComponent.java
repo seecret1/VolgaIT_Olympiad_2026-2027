@@ -31,19 +31,19 @@ public final class PopupComponent {
         this.wait = new WebDriverWait(driver, TestConfig.timeout());
     }
 
-    @Step("Wait until popup is visible")
+    @Step("Дождаться появления всплывающего окна")
     public PopupComponent waitUntilVisible() {
         wait.until(ExpectedConditions.visibilityOf(root));
         return this;
     }
 
-    @Step("Close popup")
+    @Step("Закрыть всплывающее окно")
     public void close() {
         wait.until(ExpectedConditions.elementToBeClickable(closeButton)).click();
         wait.until(ExpectedConditions.invisibilityOf(root));
     }
 
-    @Step("Press Escape in popup")
+    @Step("Нажать Escape во всплывающем окне")
     public void pressEscape() {
         new Actions(driver).sendKeys(Keys.ESCAPE).perform();
     }

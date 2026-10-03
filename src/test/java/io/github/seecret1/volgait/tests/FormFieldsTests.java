@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Epic(TestMetadata.EPIC)
-@Feature("Mandatory Automation Tools scenario")
-@DisplayName("Form Fields page")
+@Feature("Обязательный сценарий Automation Tools")
+@DisplayName("Страница «Поля формы»")
 class FormFieldsTests extends BaseUiTest {
 
     @Test
     @Severity(SeverityLevel.BLOCKER)
-    @DisplayName("Selenium reads Automation Tools and writes them to Message separated by commas")
+    @DisplayName("Обязательный сценарий — Selenium читает Automation Tools и записывает их через запятую в Message")
     void automation_tools_are_copied_to_message() {
         open(URL_FORM_FIELDS);
         FormFieldsPage form = new FormFieldsPage(driver);
