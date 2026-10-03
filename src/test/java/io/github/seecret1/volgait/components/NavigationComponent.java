@@ -3,6 +3,7 @@ package io.github.seecret1.volgait.components;
 import io.github.seecret1.volgait.config.TestConfig;
 import io.github.seecret1.volgait.constants.DomAttributes;
 import io.qameta.allure.Step;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,20 +12,27 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.Set;
 
 public final class NavigationComponent {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    @FindBy(xpath = "//header//a[@data-hover='Blog' and .//span[normalize-space()='Blog']]")
+    @FindBy(xpath = "//a[@data-hover='Blog']")
     private WebElement blogLink;
 
-    @FindBy(xpath = "//nav[contains(concat(' ', normalize-space(@class), ' '), ' breadcrumbs ')]//a[normalize-space()='Home']")
+    @FindBy(xpath = "//nav[contains(@class, 'breadcrumbs')]//a[normalize-space()='Home']")
     private WebElement homeLink;
 
-    @FindBy(xpath = "//*[contains(concat(' ', normalize-space(@class), ' '), ' entry-content ')]//a[contains(@href, 'youtube.com/watch')]")
+    @FindBy(xpath = "//div[contains(@class, 'entry-content')]//a[contains(@href, 'youtube.com/watch')]")
     private WebElement youtubeLink;
+
+    @FindBy(id = "pum-1272")
+    private List<WebElement> adPopups;
+
+    @FindBy(xpath = "//div[@id='pum-1272']//button[contains(@class, 'pum-close')]")
+    private List<WebElement> adCloseButtons;
 
     public NavigationComponent(WebDriver driver) {
         this.driver = driver;
@@ -61,7 +69,7 @@ public final class NavigationComponent {
     @Step("Открыть ссылку на YouTube в новой вкладке")
     public String openYoutube() {
         Set<String> initialHandles = driver.getWindowHandles();
-        wait.until(ExpectedConditions.elementToBeClickable(youtubeLink)).click();
+        click(youtubeLink);
         wait.until(ExpectedConditions.numberOfWindowsToBe(initialHandles.size() + 1));
 
         String newHandle = driver.getWindowHandles().stream()
@@ -85,9 +93,34 @@ public final class NavigationComponent {
 
     private String openInCurrentTab(WebElement link) {
         String initialUrl = driver.getCurrentUrl();
-        wait.until(ExpectedConditions.elementToBeClickable(link)).click();
+        click(link);
         return wait.until(current -> initialUrl.equals(current.getCurrentUrl())
                 ? null
                 : current.getCurrentUrl());
+    }
+
+    private void click(WebElement link) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(link)).click();
+        } catch (ElementClickInterceptedException exception) {
+            if (!closeBlockingAd()) {
+                throw exception;
+            }
+            wait.until(ExpectedConditions.elementToBeClickable(link)).click();
+        }
+    }
+
+    private boolean closeBlockingAd() {
+        if (adPopups.stream().noneMatch(WebElement::isDisplayed)) {
+            return false;
+        }
+
+        WebElement closeButton = adCloseButtons.stream()
+                .filter(WebElement::isDisplayed)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Кнопка закрытия рекламы не найдена"));
+        wait.until(ExpectedConditions.elementToBeClickable(closeButton)).click();
+        wait.until(ExpectedConditions.invisibilityOfAllElements(adPopups));
+        return true;
     }
 }
