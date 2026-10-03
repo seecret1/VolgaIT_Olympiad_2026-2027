@@ -45,14 +45,14 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.NORMAL)
-        @DisplayName("P01 — на странице отображается заголовок «Calendars»")
+        @DisplayName("На странице отображается заголовок «Calendars»")
         void page_has_expected_heading() {
             assertEquals(CALENDAR_HEADING, calendar.heading());
         }
 
         @Test
         @Severity(SeverityLevel.NORMAL)
-        @DisplayName("P02 — поле отображает подсказку формата даты ISO")
+        @DisplayName("Поле отображает подсказку формата даты ISO")
         void field_has_iso_format_hint() {
             assertEquals(CALENDAR_FORMAT_HINT, calendar.formatHint());
         }
@@ -67,7 +67,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P04 — текущий месяц содержит полный набор дней")
+        @DisplayName("Текущий месяц содержит полный набор дней")
         void current_month_contains_valid_days() {
             calendar.openCalendar();
             List<Integer> days = calendar.availableDays();
@@ -81,7 +81,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.BLOCKER)
-        @DisplayName("P05 — выбор первого дня заполняет поле даты")
+        @DisplayName("Выбор первого дня заполняет поле даты")
         void selecting_day_fills_input() {
             calendar.selectDay(CALENDAR_FIRST_DAY);
             assertEquals(CALENDAR_FIRST_DAY, calendar.selectedLocalDate().getDayOfMonth());
@@ -89,7 +89,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P06 — кнопка перехода вперёд изменяет отображаемый месяц")
+        @DisplayName("Кнопка перехода вперёд изменяет отображаемый месяц")
         void next_arrow_changes_month() {
             calendar.openCalendar();
             String initial = calendar.displayedMonthAndYear();
@@ -99,7 +99,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P07 — кнопка перехода назад возвращает исходный месяц")
+        @DisplayName("Кнопка перехода назад возвращает исходный месяц")
         void previous_arrow_returns_to_initial_month() {
             calendar.openCalendar();
             String initial = calendar.displayedMonthAndYear();
@@ -110,7 +110,7 @@ class CalendarTests extends BaseUiTest {
         @ParameterizedTest(name = "{0} — валидную дату {1} можно ввести")
         @MethodSource("validDates")
         @Severity(SeverityLevel.BLOCKER)
-        void valid_dates_can_be_entered(String scenarioId, String date) {
+        void valid_dates_can_be_entered(String date) {
             calendar.enterDate(date);
             assertEquals(LocalDate.parse(date), calendar.selectedLocalDate());
         }
@@ -130,7 +130,7 @@ class CalendarTests extends BaseUiTest {
         @ParameterizedTest(name = "{0} — невалидная дата {1} не распознаётся как дата ISO")
         @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
-        void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {
+        void invalid_dates_are_not_interpreted_as_iso_dates(String invalidDate) {
             calendar.enterDate(invalidDate);
             assertAll(
                     () -> assertEquals(invalidDate, calendar.selectedDate()),

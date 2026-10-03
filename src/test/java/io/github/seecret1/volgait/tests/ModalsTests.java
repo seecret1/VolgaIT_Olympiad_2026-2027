@@ -39,39 +39,39 @@ class ModalsTests extends BaseUiTest {
     class Positive {
 
         @Test
-        @DisplayName("P01 — на странице отображается заголовок «Modals»")
+        @DisplayName("На странице отображается заголовок «Modals»")
         void page_has_expected_heading() {
             assertEquals(MODALS_HEADING, modals.heading());
         }
 
         @Test
         @Severity(SeverityLevel.BLOCKER)
-        @DisplayName("P02 — кнопка «Simple Modal» открывает диалоговое окно")
+        @DisplayName("Кнопка «Simple Modal» открывает диалоговое окно")
         void simple_button_opens_dialog() {
             assertTrue(modals.openSimpleModal().isVisible());
         }
 
         @Test
-        @DisplayName("P03 — простое диалоговое окно содержит ожидаемый заголовок")
+        @DisplayName("Простое диалоговое окно содержит ожидаемый заголовок")
         void simple_dialog_has_title() {
             assertEquals(SIMPLE_MODAL_TITLE, modals.openSimpleModal().title());
         }
 
         @Test
-        @DisplayName("P04 — простое диалоговое окно содержит ожидаемый текст")
+        @DisplayName("Простое диалоговое окно содержит ожидаемый текст")
         void simple_dialog_has_text() {
             assertTrue(modals.openSimpleModal().content().contains(SIMPLE_MODAL_TEXT));
         }
 
         @Test
-        @DisplayName("P05 — в простом диалоговом окне отображается кнопка закрытия")
+        @DisplayName("В простом диалоговом окне отображается кнопка закрытия")
         void simple_dialog_has_close_button() {
             assertTrue(modals.openSimpleModal().closeButtonIsDisplayed());
         }
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P06 — кнопка закрытия скрывает простое диалоговое окно")
+        @DisplayName("Кнопка закрытия скрывает простое диалоговое окно")
         void close_button_hides_simple_dialog() {
             PopupComponent simple = modals.openSimpleModal();
             simple.close();
@@ -79,13 +79,13 @@ class ModalsTests extends BaseUiTest {
         }
 
         @Test
-        @DisplayName("P07 — кнопка «Form Modal» открывает окно с формой")
+        @DisplayName("Кнопка «Form Modal» открывает окно с формой")
         void form_button_opens_form_dialog() {
             assertEquals(FORM_MODAL_TITLE, modals.openFormModal().title());
         }
 
         @Test
-        @DisplayName("P08 — поле имени отмечено как обязательное")
+        @DisplayName("Поле имени отмечено как обязательное")
         void name_is_required() {
             modals.openFormModal();
             assertTrue(modals.contactForm().requiredNameIsMarked());
@@ -93,7 +93,7 @@ class ModalsTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P09 — форма принимает имя, электронную почту и сообщение")
+        @DisplayName("Форма принимает имя, электронную почту и сообщение")
         void form_accepts_contact_data() {
             modals.openFormModal();
             ContactData data = ContactData.builder()
@@ -117,7 +117,7 @@ class ModalsTests extends BaseUiTest {
     class Negative {
 
         @Test
-        @DisplayName("N01 — клавиша Escape не закрывает простое модальное окно")
+        @DisplayName("Клавиша Escape не закрывает простое модальное окно")
         void escape_does_not_close_simple_modal() {
             PopupComponent simple = modals.openSimpleModal();
             simple.pressEscape();
@@ -125,7 +125,7 @@ class ModalsTests extends BaseUiTest {
         }
 
         @Test
-        @DisplayName("N02 — закрытое простое модальное окно больше не отображается")
+        @DisplayName("Закрытое простое модальное окно больше не отображается")
         void closed_simple_modal_is_not_visible() {
             PopupComponent simple = modals.openSimpleModal();
             simple.close();
@@ -134,7 +134,7 @@ class ModalsTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.BLOCKER)
-        @DisplayName("N03 — пустое обязательное имя блокирует отправку формы")
+        @DisplayName("Пустое обязательное имя блокирует отправку формы")
         void empty_name_shows_validation_error() {
             modals.openFormModal();
             ContactFormComponent form = modals.contactForm();
@@ -144,7 +144,7 @@ class ModalsTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("N04 — форма отклоняет некорректный адрес электронной почты")
+        @DisplayName("Форма отклоняет некорректный адрес электронной почты")
         void malformed_email_shows_validation_error() {
             modals.openFormModal();
             ContactFormComponent form = modals.contactForm().fill(ContactData.builder()

@@ -93,6 +93,7 @@ class AdsTests extends BaseUiTest {
     @Story("Негативные сценарии рекламного окна")
     @Tag(TestMetadata.NEGATIVE)
     class Negative {
+
         @Test
         @DisplayName("N01 — реклама не отображается до завершения таймера")
         void ad_is_not_visible_immediately() {
