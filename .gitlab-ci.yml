@@ -17,10 +17,21 @@ ui-tests:
   stage: test
   parallel:
     matrix:
-      - BROWSER: [chrome, firefox]
+      - BROWSER: [chrome, firefox, edge]
   before_script:
     - apt-get update
-    - if [ "$BROWSER" = "firefox" ]; then apt-get install --yes --no-install-recommends firefox-esr; else apt-get install --yes --no-install-recommends chromium || apt-get install --yes --no-install-recommends chromium-browser; fi
+    - |
+      if [ "$BROWSER" = "firefox" ]; then
+        apt-get install --yes --no-install-recommends firefox-esr
+      elif [ "$BROWSER" = "edge" ]; then
+        apt-get install --yes --no-install-recommends ca-certificates curl gpg
+        curl --silent https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor --output /usr/share/keyrings/microsoft-edge.gpg
+        echo "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft-edge.gpg] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list
+        apt-get update
+        apt-get install --yes --no-install-recommends microsoft-edge-stable
+      else
+        apt-get install --yes --no-install-recommends chromium || apt-get install --yes --no-install-recommends chromium-browser
+      fi
   script:
     - mvn $MAVEN_CLI_OPTS clean test -Dheadless=true -Dbrowser=$BROWSER
   artifacts:

@@ -9,12 +9,18 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        browser: [chrome, firefox]
+        include:
+          - browser: chrome
+            os: ubuntu-latest
+          - browser: firefox
+            os: ubuntu-latest
+          - browser: edge
+            os: windows-latest
 
     steps:
       - name: Checkout
@@ -28,11 +34,11 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: ./mvnw --batch-mode clean test -Dheadless=true -Dbrowser=${{ matrix.browser }}
+        run: mvn --batch-mode clean test "-Dheadless=true" "-Dbrowser=${{ matrix.browser }}"
 
       - name: Build Allure report
         if: always()
-        run: ./mvnw --batch-mode allure:report
+        run: mvn --batch-mode allure:report
 
       - name: Upload test artifacts
         if: always()

@@ -287,8 +287,8 @@ docker run --rm --shm-size=2g -v "${PWD}/target:/workspace/target" volgait-ui-te
 
 ## CI/CD
 
-- **GitHub Actions** запускает матрицу Chrome/Firefox для push и pull request и сохраняет отчёты;
-- **GitLab CI** запускает параллельную матрицу браузеров, публикует JUnit и Allure artifacts, а из основной ветки разворачивает статический Allure через GitLab Pages;
-- **Jenkins** использует Declarative Pipeline и параметр `BROWSER`, собирает Docker-образ, запускает тесты и архивирует Allure/Surefire с fingerprint.
+- **GitHub Actions** запускает матрицу Chrome, Firefox и Microsoft Edge для push и pull request и сохраняет отчёты;
+- **GitLab CI** запускает параллельную матрицу Chrome, Firefox и Microsoft Edge, публикует JUnit и Allure artifacts, а из основной ветки разворачивает статический Allure через GitLab Pages;
+- **Jenkins** позволяет выбрать Chrome, Firefox или Microsoft Edge параметром `BROWSER`, собирает Docker-образ, запускает тесты и архивирует Allure/Surefire с fingerprint.
 
 Даже при падении тестов CI сохраняет `target/allure-results` и `target/surefire-reports`, поэтому причина остаётся доступной для анализа. Для Jenkins нужны Pipeline, Docker Pipeline и JUnit plugins; агенту и GitLab Runner необходим доступ к Maven Central и тестовому сайту.
