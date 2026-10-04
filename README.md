@@ -51,84 +51,55 @@ Selenium Manager автоматически подбирает драйвер б
 
 ## Запуск тестов
 
-### Весь набор
-
-Windows PowerShell:
-
-```powershell
-.\mvnw.cmd clean test
-```
-
-Если Maven установлен глобально:
+Все команды выполняются из корня проекта. Основной запуск:
 
 ```powershell
 mvn clean test
 ```
 
-Linux/macOS:
-
-```bash
-./mvnw clean test
-```
-
-По умолчанию тесты идут в headless Chrome. Чтобы видеть шесть одновременно работающих браузеров:
+По умолчанию используется Chrome без видимого окна. Запуск с открытым браузером:
 
 ```powershell
-.\mvnw.cmd clean test "-Dheadless=false"
+mvn test -Dheadless=false
 ```
+
+Если Maven не установлен, в Windows замените `mvn` на `.\mvnw.cmd`, а в Linux/macOS — на `./mvnw`.
 
 ### Выбор браузера
 
 ```powershell
-.\mvnw.cmd clean test "-Dbrowser=chrome"
-.\mvnw.cmd clean test "-Dbrowser=firefox"
-.\mvnw.cmd clean test "-Dbrowser=edge"
-.\mvnw.cmd clean test "-Dbrowser=safari" "-Dheadless=false"
+mvn test -Dbrowser=chrome
+mvn test -Dbrowser=firefox
+mvn test -Dbrowser=edge
 ```
 
-Safari поддерживается только на macOS. Перед первым запуском нужно разрешить Remote Automation командой `safaridriver --enable`.
+Safari запускается только на macOS и только с видимым окном:
 
-Прогон в нескольких локальных браузерах:
-
-```powershell
-foreach ($browser in 'chrome', 'firefox', 'edge') {
-    .\mvnw.cmd test "-Dbrowser=$browser"
-    if ($LASTEXITCODE -ne 0) { throw "Tests failed: $browser" }
-}
+```bash
+mvn test -Dbrowser=safari -Dheadless=false
 ```
 
-### Отдельный класс, метод или группа
+Перед первым запуском Safari выполните `safaridriver --enable`.
+
+### Отдельные тесты
 
 ```powershell
-.\mvnw.cmd test "-Dtest=FormFieldsTests"
-.\mvnw.cmd test "-Dtest=FormFieldsTests#successful_submit_shows_alert_and_resets_form"
-.\mvnw.cmd test "-Dgroups=positive"
-.\mvnw.cmd test "-Dgroups=negative"
+mvn test -Dtest=FormFieldsTests
+mvn test -Dgroups=positive
+mvn test -Dgroups=negative
 ```
 
 ### Selenium Grid
 
 ```powershell
-.\mvnw.cmd clean test `
-  "-Dbrowser=firefox" `
-  "-DremoteUrl=http://localhost:4444"
+mvn test -Dbrowser=firefox -DremoteUrl=http://localhost:4444
 ```
 
 Если браузер на Grid расположен не по стандартному пути, можно передать `-DbrowserBinary=/path/to/browser`.
 
 ## Параллельное выполнение
 
-JUnit 5 параллельно запускает классы и методы в фиксированном пуле из 6 потоков. Каждый тест получает собственный WebDriver, поэтому состояние браузера между сценариями не разделяется.
-
-Настройки по умолчанию находятся в `src/test/resources/junit-platform.properties`. Число потоков можно изменить из команды:
-
-```powershell
-.\mvnw.cmd clean test `
-  "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=4" `
-  "-Djunit.jupiter.execution.parallel.config.fixed.max-pool-size=4"
-```
-
-Количество потоков следует выбирать с учётом мощности компьютера: слишком большое значение может привести к нехватке памяти, тайм-аутам или ограничению числа сессий Selenium Grid.
+JUnit 5 автоматически запускает тесты в 6 параллельных потоках. Каждый тест получает собственный WebDriver, поэтому состояние браузера между сценариями не разделяется. Настройка уже находится в `src/test/resources/junit-platform.properties`; для обычного запуска ничего дополнительно указывать не нужно.
 
 ## Конфигурация
 
@@ -149,16 +120,16 @@ JUnit 5 параллельно запускает классы и методы �
 
 Результаты прогона сохраняются в `target/allure-results`.
 
-Сразу сформировать отчёт и открыть его во временном локальном сервере:
+Сформировать и сразу открыть отчёт:
 
 ```powershell
-.\mvnw.cmd allure:serve
+mvn allure:serve
 ```
 
-Сформировать статический отчёт:
+Только сформировать статический отчёт:
 
 ```powershell
-.\mvnw.cmd allure:report
+mvn allure:report
 ```
 
 После этого стартовая страница отчёта находится в `target/site/allure-maven-plugin/index.html`. Статический файл нужно открывать через веб-сервер; `allure:serve` делает это автоматически.
@@ -179,27 +150,20 @@ Chrome:
 
 ```bash
 docker build -t volgait-ui-tests .
-docker run --rm --shm-size=2g \
-  -v "${PWD}/target:/workspace/target" \
-  volgait-ui-tests
+docker run --rm --shm-size=2g volgait-ui-tests
 ```
 
 Firefox:
 
 ```bash
 docker build --build-arg BROWSER=firefox -t volgait-ui-tests:firefox .
-docker run --rm --shm-size=2g \
-  -v "${PWD}/target:/workspace/target" \
-  volgait-ui-tests:firefox
+docker run --rm --shm-size=2g volgait-ui-tests:firefox
 ```
 
-Запуск только позитивной группы с четырьмя потоками:
+Чтобы сохранить результаты Allure на компьютере, добавьте подключение папки `target`:
 
 ```bash
-docker run --rm --shm-size=2g volgait-ui-tests \
-  mvn --batch-mode test -Dgroups=positive \
-  -Djunit.jupiter.execution.parallel.config.fixed.parallelism=4 \
-  -Djunit.jupiter.execution.parallel.config.fixed.max-pool-size=4
+docker run --rm --shm-size=2g -v "${PWD}/target:/workspace/target" volgait-ui-tests
 ```
 
 ## Полный перечень тест-кейсов
