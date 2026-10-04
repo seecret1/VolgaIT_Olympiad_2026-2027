@@ -21,7 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import org.junit.jupiter.params.provider.Arguments;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,7 +58,7 @@ class CalendarTests extends BaseUiTest {
 
         @Test
         @Severity(SeverityLevel.CRITICAL)
-        @DisplayName("P03 — нажатие на поле открывает календарь")
+        @DisplayName("Нажатие на поле открывает календарь")
         void click_opens_date_picker() {
             calendar.openCalendar();
             assertTrue(calendar.widgetIsVisible());
@@ -107,18 +106,16 @@ class CalendarTests extends BaseUiTest {
             assertEquals(initial, calendar.displayedMonthAndYear());
         }
 
-        @ParameterizedTest(name = "{0} — валидную дату {1} можно ввести")
+        @ParameterizedTest(name = "Валидную дату {0} можно ввести")
         @MethodSource("validDates")
         @Severity(SeverityLevel.BLOCKER)
-        void valid_dates_can_be_entered(String scenarioId, String date) {
+        void valid_dates_can_be_entered(String date) {
             calendar.enterDate(date);
             assertEquals(LocalDate.parse(date), calendar.selectedLocalDate());
         }
 
-        static Stream<Arguments> validDates() {
-            return IntStream.range(0, CALENDAR_VALID_DATES.size())
-                    .mapToObj(index -> Arguments.of(
-                            "P%02d".formatted(index + 8), CALENDAR_VALID_DATES.get(index)));
+        static Stream<String> validDates() {
+            return CALENDAR_VALID_DATES.stream();
         }
 
         @Test
@@ -154,10 +151,10 @@ class CalendarTests extends BaseUiTest {
     @Tag(TestMetadata.NEGATIVE)
     class Negative {
 
-        @ParameterizedTest(name = "{0} — невалидная дата {1} не распознаётся как дата ISO")
+        @ParameterizedTest(name = "Невалидная дата {0} не распознаётся как дата ISO")
         @MethodSource("invalidDates")
         @Severity(SeverityLevel.CRITICAL)
-        void invalid_dates_are_not_interpreted_as_iso_dates(String scenarioId, String invalidDate) {
+        void invalid_dates_are_not_interpreted_as_iso_dates(String invalidDate) {
             calendar.enterDate(invalidDate);
             assertAll(
                     () -> assertEquals(invalidDate, calendar.selectedDate()),
@@ -165,10 +162,8 @@ class CalendarTests extends BaseUiTest {
             );
         }
 
-        static Stream<Arguments> invalidDates() {
-            return IntStream.range(0, CALENDAR_INVALID_DATES.size())
-                    .mapToObj(index -> Arguments.of(
-                            "N%02d".formatted(index + 1), CALENDAR_INVALID_DATES.get(index)));
+        static Stream<String> invalidDates() {
+            return CALENDAR_INVALID_DATES.stream();
         }
     }
 }
