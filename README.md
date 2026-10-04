@@ -36,7 +36,8 @@ src/test/java/io/github/seecret1/volgait
 ├── extensions   # вложения Allure при ошибке
 ├── model        # данные формы и Builder
 ├── pages        # Page Objects
-└── tests        # JUnit 5 UI-тесты
+├── tests        # JUnit 5 UI-тесты
+└── utils        # переиспользуемые наборы тестовых параметров
 ```
 
 ## Требования

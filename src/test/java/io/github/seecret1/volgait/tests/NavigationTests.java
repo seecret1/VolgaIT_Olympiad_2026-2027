@@ -2,6 +2,8 @@ package io.github.seecret1.volgait.tests;
 
 import io.github.seecret1.volgait.components.NavigationComponent;
 import io.github.seecret1.volgait.constants.TestMetadata;
+import io.github.seecret1.volgait.utils.NavigationTestData;
+import io.github.seecret1.volgait.utils.NavigationTestData.ExercisePage;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Severity;
@@ -15,7 +17,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriverException;
 
 import java.net.URI;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,8 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Tag(TestMetadata.POSITIVE)
 class NavigationTests extends BaseUiTest {
 
+    private static final String NEW_TAB_TARGET = "_blank";
+
     @ParameterizedTest(name = "{0} — кнопка Blog открывает сайт automateNow")
-    @MethodSource("exercisePages")
+    @MethodSource(NavigationTestData.EXERCISE_PAGES_SOURCE)
     @Story("Переход в Blog")
     @Severity(SeverityLevel.NORMAL)
     void blog_link_opens_automatenow(ExercisePage page) {
@@ -39,7 +42,7 @@ class NavigationTests extends BaseUiTest {
     }
 
     @ParameterizedTest(name = "{0} — ссылка Home открывает главную страницу")
-    @MethodSource("exercisePages")
+    @MethodSource(NavigationTestData.EXERCISE_PAGES_SOURCE)
     @Story("Переход на главную страницу")
     @Severity(SeverityLevel.CRITICAL)
     void home_link_opens_main_page(ExercisePage page) {
@@ -51,7 +54,7 @@ class NavigationTests extends BaseUiTest {
     }
 
     @ParameterizedTest(name = "{0} — ссылка открывает указанный YouTube-ролик")
-    @MethodSource("exercisePages")
+    @MethodSource(NavigationTestData.EXERCISE_PAGES_SOURCE)
     @Story("Переход к обучающему ролику")
     @Severity(SeverityLevel.NORMAL)
     void youtube_link_opens_video(ExercisePage page) {
@@ -60,7 +63,7 @@ class NavigationTests extends BaseUiTest {
 
         assertAll(
                 () -> assertEquals(page.youtubeUrl(), navigation.youtubeHref()),
-                () -> assertEquals("_blank", navigation.youtubeTarget())
+                () -> assertEquals(NEW_TAB_TARGET, navigation.youtubeTarget())
         );
         assertEquals(hostOf(page.youtubeUrl()), hostOf(navigation.openYoutube()));
 
@@ -72,22 +75,7 @@ class NavigationTests extends BaseUiTest {
         }
     }
 
-    static Stream<ExercisePage> exercisePages() {
-        return Stream.of(
-                new ExercisePage("Calendars", URL_CALENDARS, URL_YOUTUBE_CALENDARS),
-                new ExercisePage("Modals", URL_MODALS, URL_YOUTUBE_MODALS),
-                new ExercisePage("Ads", URL_ADS, URL_YOUTUBE_ADS)
-        );
-    }
-
     private static String hostOf(String url) {
         return URI.create(url).getHost();
-    }
-
-    record ExercisePage(String name, String url, String youtubeUrl) {
-        @Override
-        public String toString() {
-            return name;
-        }
     }
 }
