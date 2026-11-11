@@ -21,8 +21,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
+import java.net.URI;
 
 import static io.github.seecret1.volgait.tests.ui.AlertAssertions.assertAll;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -175,14 +178,25 @@ class LoginTests extends BaseUiTest {
     class Negative {
 
         @Test
+        @DisplayName("После выхода прямой переход в профиль не открывает аккаунт")
+        void profile_is_protected_after_logout() {
+            account = accounts.create();
+            loginPage.login(account.userName(), account.password()).logout();
+            open(URI.create(URL_LOGIN)
+                    .resolve(ConfigProvider.CONFIG.getString("bookStore.sideMenu.profilePath")).toString());
+            assertTrue(new ProfilePage(driver).showsLoggedOutNotice());
+            assertEquals(401, api.getUser(account.userId(), account.token()).statusCode());
+        }
+
+        @Test
         @DisplayName("Вход несуществующего пользователя отклоняется")
         void unknown_username_is_rejected() {
             loginPage.submitLogin(AccountFixture.uniqueUserName(), ConfigProvider.GENERATED_USER_PASSWORD);
             assertEquals(ConfigProvider.INVALID_LOGIN_TEXT, loginPage.loginErrorText());
         }
 
-        @org.junit.jupiter.params.ParameterizedTest(name = "Пустое поле входа: {0}")
-        @org.junit.jupiter.params.provider.ValueSource(strings = {"username", "password"})
+        @ParameterizedTest(name = "Пустое поле входа: {0}")
+        @ValueSource(strings = {"username", "password"})
         void empty_login_field_is_rejected(String field) {
             loginPage.submitLogin(field.equals("username") ? "" : AccountFixture.uniqueUserName(),
                     field.equals("password") ? "" : ConfigProvider.GENERATED_USER_PASSWORD);

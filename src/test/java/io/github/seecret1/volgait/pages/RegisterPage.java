@@ -2,7 +2,6 @@ package io.github.seecret1.volgait.pages;
 
 import io.github.seecret1.volgait.components.AlertComponent;
 import io.qameta.allure.Step;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.UnhandledAlertException;
@@ -13,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class RegisterPage extends BasePage {
@@ -37,6 +37,9 @@ public final class RegisterPage extends BasePage {
 
     @FindBy(id = "name")
     private WebElement validationMessage;
+
+    @FindBy(css = "iframe[src*='recaptcha'], iframe[title*='reCAPTCHA']")
+    private List<WebElement> recaptchaFrames;
 
     private final AlertComponent alerts;
 
@@ -106,13 +109,19 @@ public final class RegisterPage extends BasePage {
     }
 
     public boolean isFieldInvalid(String fieldId) {
+        WebElement input = switch (fieldId) {
+            case "firstname" -> firstName;
+            case "lastname" -> lastName;
+            case "userName" -> userName;
+            case "password" -> password;
+            default -> throw new IllegalArgumentException("Unknown registration field: " + fieldId);
+        };
         return new WebDriverWait(driver, Duration.ofSeconds(5)).until(current ->
-                current.findElement(By.id(fieldId)).getAttribute("class").contains("is-invalid"));
+                input.getAttribute("class").contains("is-invalid"));
     }
 
     public boolean hasRecaptchaWidget() {
-        return !driver.findElements(By.cssSelector(
-                "iframe[src*='recaptcha'], iframe[title*='reCAPTCHA']")).isEmpty();
+        return !recaptchaFrames.isEmpty();
     }
 
     public boolean hasValidationTextNow(String expectedText) {

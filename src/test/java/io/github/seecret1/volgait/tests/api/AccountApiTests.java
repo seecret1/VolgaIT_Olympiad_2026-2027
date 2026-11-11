@@ -10,6 +10,7 @@ import io.qameta.allure.Story;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.Arguments;
@@ -28,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AccountApiTests extends BaseApiTest {
 
     @ParameterizedTest(name = "Пустое поле регистрации: {0}")
-    @org.junit.jupiter.params.provider.ValueSource(strings = {"username", "password", "both"})
+    @ValueSource(strings = {"username", "password", "both"})
     @Tag(TestMetadata.NEGATIVE)
     void empty_registration_credentials_are_rejected(String missing) {
         String username = missing.equals("password") ? AccountFixture.uniqueUserName() : "";

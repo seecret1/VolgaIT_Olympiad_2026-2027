@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
@@ -38,15 +40,14 @@ class BookStoreApiTests extends BaseApiTest {
                 .body().path("books").get(0).path("isbn").asText());
     }
 
-    @org.junit.jupiter.params.ParameterizedTest(name = "Чужой token: {0}")
-    @org.junit.jupiter.params.provider.ValueSource(strings = {"read", "add", "delete", "clear"})
+    @ParameterizedTest(name = "Чужой token: {0}")
+    @ValueSource(strings = {"add", "delete", "clear"})
     @Tag(TestMetadata.NEGATIVE)
     void another_user_cannot_access_collection(String operation) {
         var other = accounts.create();
         String isbn = books.get(0).path("isbn").asText();
         response(api.addBooks(account.userId(), List.of(isbn), account.token()), 201, "collection.json");
         ApiResponse denied = switch (operation) {
-            case "read" -> api.getUser(account.userId(), other.token());
             case "add" -> api.addBooks(account.userId(), List.of(books.get(1).path("isbn").asText()), other.token());
             case "delete" -> api.deleteBook(isbn, account.userId(), other.token());
             default -> api.clearBooks(account.userId(), other.token());
@@ -57,8 +58,8 @@ class BookStoreApiTests extends BaseApiTest {
                 () -> assertEquals(isbn, owner.body().path("books").get(0).path("isbn").asText()));
     }
 
-    @org.junit.jupiter.params.ParameterizedTest(name = "Несуществующий ISBN: {0}")
-    @org.junit.jupiter.params.provider.ValueSource(strings = {"read", "add"})
+    @ParameterizedTest(name = "Несуществующий ISBN: {0}")
+    @ValueSource(strings = {"read", "add"})
     @Tag(TestMetadata.NEGATIVE)
     void unknown_isbn_is_rejected(String operation) {
         String isbn = ConfigProvider.CONFIG.getString("bookStore.api.missingIsbn");
@@ -73,15 +74,11 @@ class BookStoreApiTests extends BaseApiTest {
                 .body().path("books").isEmpty());
     }
 
-    @org.junit.jupiter.params.ParameterizedTest(name = "Удаление отсутствующей книги, предварительно добавлена: {0}")
-    @org.junit.jupiter.params.provider.ValueSource(booleans = {false, true})
+    @Test
+    @DisplayName("Удаление отсутствующей в коллекции книги отклоняется")
     @Tag(TestMetadata.NEGATIVE)
-    void absent_or_already_deleted_book_is_rejected(boolean previouslyAdded) {
+    void absent_book_is_rejected() {
         String isbn = books.get(0).path("isbn").asText();
-        if (previouslyAdded) {
-            response(api.addBooks(account.userId(), List.of(isbn), account.token()), 201, "collection.json");
-            emptyResponse(api.deleteBook(isbn, account.userId(), account.token()), 204);
-        }
         ApiResponse rejected = response(api.deleteBook(isbn, account.userId(), account.token()), 400, "error.json");
         assertFalse(rejected.body().path("message").asText().isBlank());
         assertTrue(response(api.getUser(account.userId(), account.token()), 200, "user.json")

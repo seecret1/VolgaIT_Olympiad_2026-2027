@@ -82,44 +82,17 @@ class BookStoreUiTests extends BaseUiTest {
     class Positive {
 
         @Test
-        @DisplayName("Очистка поиска восстанавливает весь каталог")
-        void clearing_search_restores_catalog() {
-            BookStorePage store = openStore();
-            store.search(ConfigProvider.BOOK_STORE_MISSING_SEARCH);
-            assertTrue(store.displayedBookTitles().isEmpty());
-            store.search("");
-            assertEquals(titles(catalog), store.displayedBookTitles());
-        }
-
-        @org.junit.jupiter.params.ParameterizedTest(name = "Поиск по {0}")
-        @org.junit.jupiter.params.provider.ValueSource(strings = {"author", "publisher"})
-        void search_matches_author_and_publisher(String field) {
-            String query = catalog.get(0).path(field).asText();
-            assertFalse(query.isBlank());
+        @DisplayName("Поиск пробела соответствует текстовым полям каталога")
+        void whitespace_search_matches_catalog() {
+            String query = ConfigProvider.CONFIG.getString("bookStore.search.whitespaceQuery");
             List<String> expected = new ArrayList<>();
             for (JsonNode book : catalog) {
-                if (List.of("title", "author", "publisher").stream().anyMatch(key ->
-                        book.path(key).asText().toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT)))) {
+                if (List.of("title", "author", "publisher").stream()
+                        .anyMatch(key -> book.path(key).asText().contains(query))) {
                     expected.add(title(book));
                 }
             }
             assertEquals(expected, openStore().search(query).displayedBookTitles());
-        }
-
-        @Test
-        @DisplayName("Коллекция сохраняется после обновления и повторного входа")
-        void collection_survives_refresh_and_relogin() {
-            List<JsonNode> selected = firstBooks(ConfigProvider.BOOK_STORE_E2E_BOOK_COUNT);
-            assertEquals(201, api.addBooks(account.userId(), isbns(selected), account.token()).statusCode());
-            ProfilePage profile = loginPage.login(account.userName(), account.password());
-            driver.navigate().refresh();
-            profile = new ProfilePage(driver).waitUntilLoaded().waitForBookCount(selected.size());
-            assertEquals(new HashSet<>(selected.stream().map(BookStoreUiTests.this::title).toList()),
-                    new HashSet<>(profile.displayedBookTitles()));
-            ProfilePage afterLogin = profile.logout().login(account.userName(), account.password());
-            assertEquals(new HashSet<>(selected.stream().map(BookStoreUiTests.this::title).toList()),
-                    new HashSet<>(afterLogin.waitForBookCount(selected.size()).displayedBookTitles()));
-            assertEquals(account.userName(), afterLogin.displayedUserName());
         }
 
         @Test

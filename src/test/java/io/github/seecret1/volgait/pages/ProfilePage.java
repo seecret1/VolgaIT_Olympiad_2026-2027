@@ -2,6 +2,7 @@ package io.github.seecret1.volgait.pages;
 
 import io.qameta.allure.Step;
 import io.github.seecret1.volgait.components.AlertComponent;
+import io.github.seecret1.volgait.components.BookTableRowComponent;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -39,6 +40,21 @@ public final class ProfilePage extends BasePage {
     @FindBy(xpath = "//button[normalize-space()='Delete All Books']")
     private WebElement deleteAllBooksButton;
 
+    @FindBy(id = "notLoggin-label")
+    private WebElement loggedOutNotice;
+
+    @FindBy(id = "userName-value")
+    private List<WebElement> userNameValues;
+
+    @FindBy(xpath = "//button[normalize-space()='Next']")
+    private WebElement nextPageButton;
+
+    @FindBy(xpath = "//button[normalize-space()='Previous']")
+    private WebElement previousPageButton;
+
+    @FindBy(xpath = "//span[contains(normalize-space(),'Page ') and contains(normalize-space(),' of ')]")
+    private WebElement paginationInfo;
+
     public ProfilePage(WebDriver driver) {
         super(driver);
         alerts = new AlertComponent(driver);
@@ -52,6 +68,11 @@ public final class ProfilePage extends BasePage {
 
     public String displayedUserName() {
         return visible(userNameValue).getText().trim();
+    }
+
+    public boolean showsLoggedOutNotice() {
+        return new WebDriverWait(driver, Duration.ofSeconds(15)).until(current ->
+                loggedOutNotice.isDisplayed() && userNameValues.isEmpty());
     }
 
     public String authenticationToken() {
@@ -83,8 +104,7 @@ public final class ProfilePage extends BasePage {
     }
 
     public List<String> displayedBookTitles() {
-        return driver.findElements(By.cssSelector("table tbody a[href^='/books?search=']"))
-                .stream()
+        return bookLinks.stream()
                 .map(WebElement::getText)
                 .map(String::trim)
                 .filter(text -> !text.isBlank())
@@ -92,9 +112,7 @@ public final class ProfilePage extends BasePage {
     }
 
     public boolean displaysBook(String title) {
-        By titleLink = By.xpath("//table//a[normalize-space()="
-                + xpathLiteral(title) + "]");
-        return wait.until(current -> !current.findElements(titleLink).isEmpty());
+        return wait.until(current -> displayedBookTitles().contains(title));
     }
 
     @Step("Обновить профиль")
@@ -115,12 +133,13 @@ public final class ProfilePage extends BasePage {
     public ProfilePage deleteBook(String title) {
         By row = By.xpath("//tr[.//a[normalize-space()="
                 + xpathLiteral(title) + "]]");
-        WebElement delete = wait.until(current -> current.findElement(row)
-                .findElement(By.cssSelector("span[title='Delete']")));
+        WebElement delete = wait.until(current ->
+                ExpectedConditions.elementToBeClickable(
+                        new BookTableRowComponent(current.findElement(row)).deleteButton()).apply(current));
         scrollIntoView(delete);
         delete.click();
         confirmBookDeletion();
-        wait.until(current -> current.findElements(By.linkText(title)).isEmpty());
+        wait.until(current -> !displayedBookTitles().contains(title));
         return this;
     }
 
@@ -166,26 +185,24 @@ public final class ProfilePage extends BasePage {
 
     public ProfilePage nextPage() {
         int previousPage = currentPage();
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[normalize-space()='Next']"))).click();
+        clickable(nextPageButton).click();
         wait.until(current -> currentPage() == previousPage + 1);
         return this;
     }
 
     public ProfilePage previousPage() {
         int previousPage = currentPage();
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//button[normalize-space()='Previous']"))).click();
+        clickable(previousPageButton).click();
         wait.until(current -> currentPage() == previousPage - 1);
         return this;
     }
 
     public boolean isNextPageEnabled() {
-        return driver.findElement(By.xpath("//button[normalize-space()='Next']")).isEnabled();
+        return nextPageButton.isEnabled();
     }
 
     public boolean isPreviousPageEnabled() {
-        return driver.findElement(By.xpath("//button[normalize-space()='Previous']")).isEnabled();
+        return previousPageButton.isEnabled();
     }
 
     @Step("Выйти из аккаунта")
@@ -222,11 +239,9 @@ public final class ProfilePage extends BasePage {
     }
 
     private int[] paginationNumbers() {
-        By pageInfo = By.xpath(
-                "//span[contains(normalize-space(),'Page ') and contains(normalize-space(),' of ')]");
         return wait.until(current -> {
             try {
-                String text = current.findElement(pageInfo).getText();
+                String text = paginationInfo.getText();
                 java.util.regex.Matcher matcher = java.util.regex.Pattern
                         .compile("Page\\s+(\\d+)\\s+of\\s+(\\d+)")
                         .matcher(text);

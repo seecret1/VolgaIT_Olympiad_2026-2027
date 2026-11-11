@@ -2,9 +2,11 @@ package io.github.seecret1.volgait.pages;
 
 import io.qameta.allure.Step;
 import io.github.seecret1.volgait.components.AlertComponent;
+import io.github.seecret1.volgait.components.BookTableRowComponent;
 import io.github.seecret1.volgait.model.BookRow;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
+import java.util.Locale;
 
 public final class BookStorePage extends BasePage {
 
@@ -24,14 +27,19 @@ public final class BookStorePage extends BasePage {
     @FindBy(id = "searchBox")
     private WebElement searchBox;
 
+    @FindBy(xpath = "//table/tbody/tr[.//a[contains(@href,'search=')]]")
+    private List<WebElement> bookRows;
+
+    @FindBy(xpath = "//button[normalize-space()='Add To Your Collection']")
+    private WebElement addToCollectionButton;
+
     public BookStorePage(WebDriver driver) {
         super(driver);
         alerts = new AlertComponent(driver);
     }
 
     public BookStorePage waitUntilLoaded() {
-        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
-                By.cssSelector("table tbody a[href^='/books?search=']")));
+        wait.until(current -> !bookLinks.isEmpty());
         return this;
     }
 
@@ -49,16 +57,13 @@ public final class BookStorePage extends BasePage {
     public BookStorePage openBookByIsbn(String isbn) {
         URI current = URI.create(driver.getCurrentUrl());
         driver.get(current.resolve("/books?search=" + isbn).toString());
-        wait.until(ExpectedConditions.presenceOfElementLocated(
-                By.xpath("//button[normalize-space()='Add To Your Collection']")));
+        visible(addToCollectionButton);
         return this;
     }
 
     @Step("Добавить открытую книгу в коллекцию")
     public String addOpenedBookToCollection() {
-        By addButton = By.xpath("//button[normalize-space()='Add To Your Collection']");
-        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(addButton));
-        click(button);
+        click(addToCollectionButton);
         return alerts.acceptIfPresent(Duration.ofSeconds(30)).orElse("");
     }
 
@@ -71,9 +76,14 @@ public final class BookStorePage extends BasePage {
 
     @Step("Найти книги по запросу {query}")
     public BookStorePage search(String query) {
-        replace(searchBox, query);
-        wait.until(current -> displayedBookTitles().stream()
-                .allMatch(title -> title.toLowerCase().contains(query.toLowerCase())));
+        WebElement input = visible(searchBox);
+        input.sendKeys(Keys.HOME, Keys.chord(Keys.SHIFT, Keys.END), Keys.BACK_SPACE);
+        input.sendKeys(query);
+        wait.ignoring(StaleElementReferenceException.class)
+                .until(current -> query.isEmpty() ? !displayedBookTitles().isEmpty()
+                        : bookRows.stream()
+                        .allMatch(row -> row.getText().toLowerCase(Locale.ROOT)
+                                .contains(query.toLowerCase(Locale.ROOT))));
         return this;
     }
 
@@ -87,13 +97,12 @@ public final class BookStorePage extends BasePage {
     }
 
     public List<BookRow> displayedBookRows() {
-        return driver.findElements(By.cssSelector("table tbody tr")).stream()
+        return bookRows.stream()
+                .map(BookTableRowComponent::new)
                 .map(row -> {
-                    WebElement link = row.findElement(By.cssSelector("a[href*='search=']"));
-                    WebElement image = row.findElement(By.cssSelector("img"));
-                    String href = link.getAttribute("href");
+                    String href = row.href();
                     String isbn = href.substring(href.indexOf("search=") + "search=".length());
-                    return new BookRow(isbn, link.getText().trim(), image.getAttribute("src"));
+                    return new BookRow(isbn, row.title(), row.imageSource());
                 })
                 .toList();
     }
