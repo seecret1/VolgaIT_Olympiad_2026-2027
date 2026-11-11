@@ -18,6 +18,8 @@ public interface ConfigProvider {
     String URL_FORM_FIELDS = CONFIG.getString("urls.formFields");
     String URL_HOME = CONFIG.getString("urls.home");
     String URL_BLOG = CONFIG.getString("urls.blog");
+    String URL_LOGIN = CONFIG.getString("urls.login");
+    String URL_API_SWAGGER = CONFIG.getString("urls.swagger");
     String URL_YOUTUBE_CALENDARS = CONFIG.getString("urls.youtube.calendars");
     String URL_YOUTUBE_MODALS = CONFIG.getString("urls.youtube.modals");
     String URL_YOUTUBE_ADS = CONFIG.getString("urls.youtube.ads");
@@ -68,4 +70,71 @@ public interface ConfigProvider {
     List<String> FORM_FIELDS_AUTOMATION_OPTIONS = CONFIG.getStringList("formFields.automationOptions");
     String FORM_FIELDS_AUTOMATION_SELECTION = CONFIG.getString("formFields.automationSelection");
     String FORM_FIELDS_ALERT_TEXT = CONFIG.getString("formFields.alertText");
+
+    String NEW_CORRECT_FIRST_NAME = CONFIG.getString("login.newUser.newCorrectUser.fistName");
+    String NEW_CORRECT_LAST_NAME = CONFIG.getString("login.newUser.newCorrectUser.lastName");
+    String NEW_CORRECT_USERNAME = CONFIG.getString("login.newUser.newCorrectUser.userName");
+    String NEW_CORRECT_PASS = CONFIG.getString("login.passwordFormats.correctPass");
+
+    String NEW_EMPTY_FIRST_NAME = CONFIG.getString("login.newUser.newIncorrectUser.fistName");
+    String NEW_EMPTY_LAST_NAME = CONFIG.getString("login.newUser.newIncorrectUser.lastName");
+    String NEW_EMPTY_USERNAME = CONFIG.getString("login.newUser.newIncorrectUser.userName");
+    String NEW_EMPTY_PASS = CONFIG.getString("login.passwordFormats.emptyPass");
+
+    String NEW_INCORRECT_PASS = CONFIG.getString("login.passwordFormats.incorrectPass");
+    String GENERATED_USER_PREFIX = CONFIG.getString("login.generatedUser.prefix");
+    int GENERATED_USER_SUFFIX_LENGTH = CONFIG.getInt("login.generatedUser.suffixLength");
+    String GENERATED_USER_PASSWORD = CONFIG.getString("login.generatedUser.testPassword");
+    String WRONG_ACCOUNT_PASS = CONFIG.getString("login.passwordFormats.wrongAccountPass");
+    String WEAK_PASS = CONFIG.getString("login.passwordFormats.weakPass");
+
+    String NEW_KIRILIC_FIRST_NAME = CONFIG.getString("login.newUser.newKirilicUser.fistName");
+    String NEW_KIRILIC_LAST_NAME = CONFIG.getString("login.newUser.newKirilicUser.lastName");
+    String NEW_KIRILIC_USERNAME = CONFIG.getString("login.newUser.newKirilicUser.userName");
+    String NEW_KIRILIC_PASS = CONFIG.getString("login.passwordFormats.kirilicPass");
+
+    String NEW_USER_LATIN_VALIDATION_TEXT = CONFIG.getString("login.testName.latin");
+    String NEW_USER_RECAPTCHA_VALIDATION_TEXT = CONFIG.getString("login.testName.ifReCaptcha");
+    String NEW_USER_SUCCESS_ALERT_TEXT = CONFIG.getString("login.testName.successAlert");
+    String INVALID_LOGIN_TEXT = CONFIG.getString("login.testName.invalidLogin");
+    String PASSWORD_ERROR_FRAGMENT = CONFIG.getString("login.testName.passwordErrorFragment");
+    String FAILED_TOKEN_STATUS = CONFIG.getString("login.testName.failedTokenStatus");
+
+    String REGISTRATION_DIGITS_FIRST_NAME = CONFIG.getString("login.registrationInput.digits.firstName");
+    String REGISTRATION_DIGITS_LAST_NAME = CONFIG.getString("login.registrationInput.digits.lastName");
+    String REGISTRATION_LOWERCASE_FIRST_NAME = CONFIG.getString("login.registrationInput.lowercase.firstName");
+    String REGISTRATION_LOWERCASE_LAST_NAME = CONFIG.getString("login.registrationInput.lowercase.lastName");
+    String REGISTRATION_SPACES_FIRST_NAME = CONFIG.getString("login.registrationInput.spaces.firstName");
+    String REGISTRATION_SPACES_LAST_NAME = CONFIG.getString("login.registrationInput.spaces.lastName");
+    String REGISTRATION_NUMERIC_FIRST_NAME = CONFIG.getString("login.registrationInput.numericUsername.firstName");
+    String REGISTRATION_NUMERIC_LAST_NAME = CONFIG.getString("login.registrationInput.numericUsername.lastName");
+    String REGISTRATION_NUMERIC_USERNAME_PREFIX = CONFIG.getString("login.registrationInput.numericUsername.prefix");
+
+    int BOOK_STORE_MINIMUM_CATALOG_SIZE = CONFIG.getInt("bookStore.minimumCatalogSize");
+    int BOOK_STORE_E2E_BOOK_COUNT = CONFIG.getInt("bookStore.e2eBookCount");
+    String BOOK_STORE_COMMON_SEARCH = CONFIG.getString("bookStore.search.commonFragment");
+    int BOOK_STORE_COMMON_MINIMUM_MATCHES = CONFIG.getInt("bookStore.search.commonMinimumMatches");
+    String BOOK_STORE_MISSING_SEARCH = CONFIG.getString("bookStore.search.missingQuery");
+    String BOOK_ADDED_ALERT = CONFIG.getString("bookStore.alerts.added");
+    String BOOK_DUPLICATE_ALERT = CONFIG.getString("bookStore.alerts.duplicate");
+    String BOOK_DELETED_ALERT = CONFIG.getString("bookStore.alerts.deleted");
+    String ALL_BOOKS_DELETED_ALERT = CONFIG.getString("bookStore.alerts.allDeleted");
+    String USER_DELETED_ALERT = CONFIG.getString("bookStore.alerts.userDeleted");
+    String BOOK_API_DUPLICATE_MESSAGE = CONFIG.getString("bookStore.api.duplicateMessageFragment");
+    String SIDE_PROFILE_LABEL = CONFIG.getString("bookStore.sideMenu.profileLabel");
+    String SIDE_PROFILE_PATH = CONFIG.getString("bookStore.sideMenu.profilePath");
+    String SIDE_STORE_LABEL = CONFIG.getString("bookStore.sideMenu.storeLabel");
+    String SIDE_STORE_PATH = CONFIG.getString("bookStore.sideMenu.storePath");
+    String SIDE_LOGIN_LABEL = CONFIG.getString("bookStore.sideMenu.loginLabel");
+    String SIDE_LOGIN_PATH = CONFIG.getString("bookStore.sideMenu.loginPath");
+
+    String NEW_NUMBER_FIRST_NAME = CONFIG.getString("login.newUser.newNumberUser.fistName");
+    String NEW_NUMBER_LAST_NAME = CONFIG.getString("login.newUser.newNumberUser.lastName");
+    String NEW_NUMBER_USERNAME = CONFIG.getString("login.newUser.newNumberUser.userName");
+    String NEW_NUMBER_PASS = CONFIG.getString("login.passwordFormats.numberPass");
+
+    String UPPER_CASE_PASS = CONFIG.getString("login.passwordFormats.uppercasePass");
+    String SYMBOL_PASS = CONFIG.getString("login.passwordFormats.symbolPass");
+    String NUMBER_PASS = CONFIG.getString("login.passwordFormats.numberPass");
+
 }

@@ -1,4 +1,4 @@
-package io.github.seecret1.volgait.tests;
+package io.github.seecret1.volgait.tests.ui;
 
 import io.github.seecret1.volgait.components.NavigationComponent;
 import io.github.seecret1.volgait.constants.TestMetadata;

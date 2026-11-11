@@ -1,20 +1,32 @@
-name: UI tests
+name: UI and API tests
 
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
+    name: All tests (${{ matrix.browser }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:
-        browser: [chrome, firefox]
+        include:
+          - browser: chrome
+            os: ubuntu-latest
+          - browser: firefox
+            os: ubuntu-latest
+          - browser: edge
+            os: windows-latest
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout
@@ -27,19 +39,24 @@ jobs:
           java-version: "17"
           cache: maven
 
-      - name: Run tests
-        run: ./mvnw --batch-mode clean test -Dheadless=true -Dbrowser=${{ matrix.browser }}
+      # No -Dtest or tag filters: discover all UI, API and unit tests.
+      # Parallel execution is configured centrally in junit-platform.properties.
+      - name: Run all tests
+        run: >-
+          ./mvnw --batch-mode --no-transfer-progress clean test
+          -Dheadless=true -Dbrowser=${{ matrix.browser }} -DfailIfNoTests=true
 
       - name: Build Allure report
         if: always()
-        run: ./mvnw --batch-mode allure:report
+        run: ./mvnw --batch-mode --no-transfer-progress allure:report
 
       - name: Upload test artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ui-test-artifacts-${{ matrix.browser }}
+          name: test-artifacts-${{ matrix.browser }}
           if-no-files-found: warn
+          retention-days: 14
           path: |
             target/allure-results
             target/site/allure-maven-plugin

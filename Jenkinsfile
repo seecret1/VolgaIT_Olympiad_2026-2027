@@ -14,7 +14,7 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'BROWSER', choices: ['chrome', 'firefox'],
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'],
                 description: 'Browser used by the Selenium test suite')
     }
 

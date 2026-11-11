@@ -115,8 +115,7 @@ public final class FormFieldsPage extends BasePage {
 
     @Step("Нажать кнопку отправки формы")
     public void submitWithoutWaitingForAlert() {
-        scrollIntoView(submitButton);
-        clickable(submitButton).click();
+        click(submitButton);
     }
 
     public String messageValue() {
@@ -181,7 +180,6 @@ public final class FormFieldsPage extends BasePage {
     }
 
     private void clickOption(WebElement option) {
-        scrollIntoView(option);
-        clickable(option).click();
+        click(option);
     }
 }

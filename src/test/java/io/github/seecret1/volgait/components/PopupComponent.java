@@ -4,6 +4,7 @@ import io.github.seecret1.volgait.config.TestConfig;
 import io.github.seecret1.volgait.constants.DomAttributes;
 import io.qameta.allure.Step;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -104,7 +105,7 @@ public final class PopupComponent {
             try {
                 element.click();
                 return true;
-            } catch (org.openqa.selenium.ElementClickInterceptedException exception) {
+            } catch (ElementClickInterceptedException exception) {
                 return false;
             }
         });

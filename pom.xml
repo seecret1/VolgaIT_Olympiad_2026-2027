@@ -16,6 +16,8 @@
         <junit.version>5.13.4</junit.version>
         <allure.version>2.30.0</allure.version>
         <typesafe.config.version>1.4.3</typesafe.config.version>
+        <jackson.version>2.20.1</jackson.version>
+        <json-schema-validator.version>2.0.8</json-schema-validator.version>
         <aspectj.version>1.9.24</aspectj.version>
         <surefire.version>3.5.4</surefire.version>
     </properties>
@@ -54,6 +56,18 @@
             <groupId>com.typesafe</groupId>
             <artifactId>config</artifactId>
             <version>${typesafe.config.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>${json-schema-validator.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

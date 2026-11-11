@@ -1,4 +1,4 @@
-package io.github.seecret1.volgait.tests;
+package io.github.seecret1.volgait.tests.ui;
 
 import io.github.seecret1.volgait.constants.TestMetadata;
 
@@ -36,5 +36,9 @@ public abstract class BaseUiTest implements ConfigProvider {
 
     protected void open(String url) {
         driver.get(url);
+    }
+
+    protected void attachBrowserState(String screenshotName) {
+        screenshotExtension.attachBrowserState(screenshotName);
     }
 }

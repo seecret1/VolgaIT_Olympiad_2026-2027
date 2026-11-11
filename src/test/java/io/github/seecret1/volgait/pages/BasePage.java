@@ -2,6 +2,7 @@ package io.github.seecret1.volgait.pages;
 
 import io.github.seecret1.volgait.config.TestConfig;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -51,5 +52,19 @@ public abstract class BasePage {
     protected void scrollIntoView(WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].scrollIntoView({block: 'center'});", visible(element));
+    }
+
+    protected void click(WebElement element) {
+        scrollIntoView(element);
+        try {
+            clickable(element).click();
+        } catch (ElementClickInterceptedException firstAttempt) {
+            ((JavascriptExecutor) driver).executeScript("window.scrollBy(0, -120);");
+            try {
+                clickable(element).click();
+            } catch (ElementClickInterceptedException secondAttempt) {
+                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+            }
+        }
     }
 }
